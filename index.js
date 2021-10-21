@@ -1,9 +1,54 @@
-const apply = (f, args, scope) => Reflect.apply(f, scope, args)
+////////////////////////////////////////////////////////////////////////////////
+// Utilities
 
-const fn = (f, args) => apply(f, args)
 
-const evaluate = ([f, ...args]) => fn(f, args)
+const log = console.log
 
-const expression = [console.log, 'Hello world', 1+1, []]
+const forEach = function(list, f) { list.forEach(x => f(x)) }
 
-evaluate(expression)
+const push = (x, list) => list.push(x)
+
+const apply = (f, list) => Reflect.apply(f, undefined, list)
+
+const add = ({ a, b }) => a + b
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Core
+
+
+var store = {}
+
+const history = [store]
+
+const assign = x => (push(x, history), store = { ...store, ...x })
+
+const evaluate = ([f, ...args]) => apply(f, args) // TODO: Recurse
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Application
+
+
+apply(
+  forEach, [[
+    1,
+    apply(
+      add, [{
+        a: 1,
+        b: 1 }]),
+    apply(
+      add, [{
+        a: 1,
+        b: apply(
+          add, [{
+            a: 1,
+            b: 1 }])}])],
+  log])
+
+evaluate([
+  log,
+  assign({ foo: 'bar' }),
+  assign({ baz: 'qux' }),
+  history])
+
