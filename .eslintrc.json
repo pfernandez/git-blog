@@ -1,32 +1,70 @@
 {
-    "env": {
-        "browser": true,
-        "es2021": true
-    },
-    "extends": "eslint:recommended",
-    "parserOptions": {
-        "ecmaVersion": "latest",
-        "sourceType": "module"
-    },
-    "plugins": [
-        "immutable"
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": "eslint:recommended",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "rules": {
+    "array-bracket-newline": [
+      "warn",
+      "never"
     ],
-    "rules": {
-        "immutable/no-let": 2,
-        "immutable/no-this": 2,
-        "immutable/no-mutation": 2,
-        "no-var": "error",
-        "indent": ["error", 2],
-        "linebreak-style": ["error", "unix"],
-        "quotes": ["error", "single"],
-        "semi": ["error", "never"],
-        "array-bracket-newline": ["error", "never"],
-        "object-curly-spacing": ["error", "always"],
-        "computed-property-spacing": ["error", "never"],
-        "comma-spacing": ["error", { "before": false, "after": true }],
-        "comma-style": ["error", "last"],
-        "operator-linebreak": ["error", "before"],
-        "no-unused-vars": ["warn", { "args": "all", "argsIgnorePattern": "^_" }],
-        "no-param-reassign": "error"
-    }
+    "comma-spacing": [
+      "warn",
+      {
+        "before": false,
+        "after": true
+      }
+    ],
+    "comma-style": [
+      "warn",
+      "last"
+    ],
+    "computed-property-spacing": [
+      "error",
+      "never"
+    ],
+    "indent": [
+      "warn",
+      2,
+      {
+        "VariableDeclarator": {
+          "var": 2,
+          "let": 2,
+          "const": 3
+        }
+      }
+    ],
+    "linebreak-style": [
+      "error",
+      "unix"
+    ],
+    "no-unused-vars": [
+      "warn",
+      {
+        "args": "all",
+        "argsIgnorePattern": "^_"
+      }
+    ],
+    "object-curly-spacing": [
+      "warn",
+      "always"
+    ],
+    "operator-linebreak": [
+      "warn",
+      "before"
+    ],
+    "quotes": [
+      "warn",
+      "single"
+    ],
+    "semi": [
+      "warn",
+      "never"
+    ]
+  }
 }

@@ -1,23 +1,19 @@
 {
-  "name": "recursive",
+  "name": "expressive",
   "version": "0.0.1",
   "description": "A Lisp syntax for JavaScript",
-  "main": "index.js",
+  "type": "module",
+  "main": "server.js",
   "scripts": {
-    "test": "test"
+    "start": "nodemon --ignore src"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pfernandez/expressive.git"
   },
   "keywords": [
-    "lisp",
     "javascript",
-    "functional",
-    "pure",
-    "tree",
-    "apply",
-    "recurse"
+    "lisp"
   ],
   "author": "Paul Fernandez",
   "license": "ISC",
@@ -26,7 +22,10 @@
   },
   "homepage": "https://github.com/pfernandez/expressive#readme",
   "devDependencies": {
+    "connect-livereload": "^0.6.1",
     "eslint": "^7.32.0",
-    "eslint-plugin-immutable": "^1.0.0"
+    "express": "^4.17.1",
+    "livereload": "^0.9.3",
+    "nodemon": "^2.0.14"
   }
 }

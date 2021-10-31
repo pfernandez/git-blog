@@ -1,7 +1,5 @@
 /* eslint-disable no-unused-vars */
 
-const log = (...x) => (console.log(...x), last(x))
-
 const nil = []
 
 const exists = x => typeof x !== undefined
