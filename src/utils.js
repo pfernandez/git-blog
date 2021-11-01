@@ -1,45 +1,67 @@
-/* eslint-disable no-unused-vars */
+export const
+  log = (...x) => (console.log(...x), x.slice(-1)[0]),
 
-const nil = []
+  nil = [],
 
-const exists = x => typeof x !== undefined
+  first = ([x]) => x,
 
-const atom = x => exists(x) && !list(x)
+  rest = ([_, ...x]) => x.length ? x : nil,
 
-const list = x => Array.isArray(x)
+  last = a => first(a.slice(-1)),
 
-const func = x => typeof x === 'function'
+  exists = x => typeof x !== undefined,
 
-const sfunc = x => list(x) && func(first(x))
+  isArray = x => Array.isArray(x),
 
-const leaf = x => list(x) && func(first(x))
+  isFunction = x => typeof x === 'function',
 
-const first = ([x]) => x  // car
+  isObject = x => typeof x === 'object' && !isArray(x) && x !== null,
 
-const rest = ([_, ...x]) => x.length ? x : nil  // cdr
+  isData = x => !(isArray(x) && isFunction(first(x))),
 
-const last = a => first(a.slice(-1))
+  some = (a, f) => a.some(f),
 
-const obj = x => typeof x === 'object' && !list(x) && x !== null // = associative list
+  among = some,
 
-const data = x => !list(x) && !func(x) && !sfunc(x)
+  entries = o => Object.entries(o),
 
-const among = (a, f) => a.some(f)
+  reduce = (a, f, v) => a.reduce(f, v),
 
-const each = (a, f) => a.forEach(x => f(x))
+  map = (a, f) => a.map(f),
 
-const map = (a, f) => a.map(f)
+  mapObject = (o, f) => reduce(entries(o), (_, [k, v]) => f(k, v), {}),
 
-const apply = (f, a) => f.apply(undefined, a)
+  forEach = (a, f) => a.forEach(f),
 
-const assoc = (x, a) => list(a)
-  ? a.find(y => list(y) ? y[0] === x : undefined)
-  : obj(x) ? a[x] : undefined
+  each = forEach,
 
-const reverse = list => [...list].reverse()
+  apply = (f, a) => f.apply(undefined, a),
 
-const λ = (obj, expr) => () => expr(obj) // TODO
+  assoc = (x, a) => isArray(a)
+    ? a.find(y => isArray(y) ? y[0] === x : undefined)
+    : isObject(x) ? a[x] : undefined,
 
-const fn = λ
+  reverse = list => [...list].reverse(),
 
-export {}
+  evaluate = ([f, ...a]) => apply(f, map(a, x => isData(x) ? x : evaluate(x))),
+
+  fn = (obj, expr) => () => expr(obj), // TODO
+
+  λ = fn,
+
+  add = (x, y) => x + y,
+
+  createElement = name => document.createElement(name),
+
+  assign = (target, source) => Object.assign(target, source),
+
+  assignDeep = (target, source) =>
+    reduce(
+      entries(source),
+      (t, [k, v]) => (t[k] = v, isObject(v) && assignDeep(t[k], v), t),
+      target),
+
+  append = (parent, ...elements) => parent.append(...elements),
+
+  replaceChildren = (parent, ...children) => parent.replaceChildren(...children)
+
