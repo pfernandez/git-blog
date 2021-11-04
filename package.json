@@ -27,5 +27,8 @@
     "express": "^4.17.1",
     "livereload": "^0.9.3",
     "nodemon": "^2.0.14"
+  },
+  "dependencies": {
+    "eslint-config-prettier": "^8.3.0"
   }
 }

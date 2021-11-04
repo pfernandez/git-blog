@@ -1,67 +1,75 @@
-export const
-  log = (...x) => (console.log(...x), x.slice(-1)[0]),
+export const log = (...x) => (console.log(...x), x.slice(-1)[0])
 
-  nil = [],
+export const nil = []
 
-  first = ([x]) => x,
+export const first = ([x]) => x
 
-  rest = ([_, ...x]) => x.length ? x : nil,
+export const rest = ([_, ...x]) => (x.length ? x : nil)
 
-  last = a => first(a.slice(-1)),
+export const last = a => first(a.slice(-1))
 
-  exists = x => typeof x !== undefined,
+export const exists = x => typeof x !== undefined
 
-  isArray = x => Array.isArray(x),
+export const isArray = x => Array.isArray(x)
 
-  isFunction = x => typeof x === 'function',
+export const isFunction = x => typeof x === 'function'
 
-  isObject = x => typeof x === 'object' && !isArray(x) && x !== null,
+export const isObject = x => typeof x === 'object' && !isArray(x) && x !== null
 
-  isData = x => !(isArray(x) && isFunction(first(x))),
+export const isData = x => !(isArray(x) && isFunction(first(x)))
 
-  some = (a, f) => a.some(f),
+export const some = (a, f) => a.some(f)
 
-  among = some,
+export const among = some
 
-  entries = o => Object.entries(o),
+export const entries = o => Object.entries(o)
 
-  reduce = (a, f, v) => a.reduce(f, v),
+export const reduce = (a, f, v) => a.reduce(f, v)
 
-  map = (a, f) => a.map(f),
+export const map = (a, f) => a.map(f)
 
-  mapObject = (o, f) => reduce(entries(o), (_, [k, v]) => f(k, v), {}),
+export const mapObject = (o, f) =>
+  reduce(entries(o), (_, [k, v]) => f(k, v), {})
 
-  forEach = (a, f) => a.forEach(f),
+export const forEach = (a, f) => a.forEach(f)
 
-  each = forEach,
+export const each = forEach
 
-  apply = (f, a) => f.apply(undefined, a),
+export const apply = (f, a) => f.apply(undefined, a)
 
-  assoc = (x, a) => isArray(a)
-    ? a.find(y => isArray(y) ? y[0] === x : undefined)
-    : isObject(x) ? a[x] : undefined,
+export const assoc = (x, a) =>
+  isArray(a)
+    ? a.find(y => (isArray(y) ? y[0] === x : undefined))
+    : isObject(x)
+    ? a[x]
+    : undefined
 
-  reverse = list => [...list].reverse(),
+export const reverse = list => [...list].reverse()
 
-  evaluate = ([f, ...a]) => apply(f, map(a, x => isData(x) ? x : evaluate(x))),
+export const evaluate = ([f, ...a]) =>
+  apply(
+    f,
+    map(a, x => (isData(x) ? x : evaluate(x)))
+  )
 
-  fn = (obj, expr) => () => expr(obj), // TODO
+export const fn = (obj, expr) => () => expr(obj) // TODO
 
-  λ = fn,
+export const λ = fn
 
-  add = (x, y) => x + y,
+export const add = (x, y) => x + y
 
-  createElement = name => document.createElement(name),
+export const createElement = name => document.createElement(name)
 
-  assign = (target, source) => Object.assign(target, source),
+export const assign = (target, source) => Object.assign(target, source)
 
-  assignDeep = (target, source) =>
-    reduce(
-      entries(source),
-      (t, [k, v]) => (t[k] = v, isObject(v) && assignDeep(t[k], v), t),
-      target),
+export const assignDeep = (target, source) =>
+  reduce(
+    entries(source),
+    (t, [k, v]) => ((t[k] = v), isObject(v) && assignDeep(t[k], v), t),
+    target
+  )
 
-  append = (parent, ...elements) => parent.append(...elements),
+export const append = (parent, ...elements) => parent.append(...elements)
 
-  replaceChildren = (parent, ...children) => parent.replaceChildren(...children)
-
+export const replaceChildren = (parent, ...children) =>
+  parent.replaceChildren(...children)
