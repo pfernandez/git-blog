@@ -4,7 +4,7 @@ export const nil = []
 
 export const first = ([x]) => x
 
-export const rest = ([_, ...x]) => (x.length ? x : nil)
+export const rest = ([_, ...x]) => x.length ? x : nil
 
 export const last = a => first(a.slice(-1))
 
@@ -37,20 +37,14 @@ export const each = forEach
 
 export const apply = (f, a) => f.apply(undefined, a)
 
-export const assoc = (x, a) =>
-  isArray(a)
-    ? a.find(y => (isArray(y) ? y[0] === x : undefined))
-    : isObject(x)
-    ? a[x]
-    : undefined
+export const assoc = (x, a) => isArray(a)
+  ? a.find(y => isArray(y) ? y[0] === x : undefined)
+  : isObject(x) ? a[x] : undefined
 
 export const reverse = list => [...list].reverse()
 
 export const evaluate = ([f, ...a]) =>
-  apply(
-    f,
-    map(a, x => (isData(x) ? x : evaluate(x)))
-  )
+  apply(f, map(a, x => isData(x) ? x : evaluate(x)))
 
 export const fn = (obj, expr) => () => expr(obj) // TODO
 
@@ -62,14 +56,13 @@ export const createElement = name => document.createElement(name)
 
 export const assign = (target, source) => Object.assign(target, source)
 
-export const assignDeep = (target, source) =>
-  reduce(
-    entries(source),
-    (t, [k, v]) => ((t[k] = v), isObject(v) && assignDeep(t[k], v), t),
-    target
-  )
+export const assignDeep = (target, source) => reduce(
+  entries(source),
+  (t, [k, v]) => (t[k] = v, isObject(v) && assignDeep(t[k], v), t),
+  target)
 
 export const append = (parent, ...elements) => parent.append(...elements)
 
 export const replaceChildren = (parent, ...children) =>
   parent.replaceChildren(...children)
+

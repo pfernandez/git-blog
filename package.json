@@ -2,25 +2,22 @@
   "name": "expressive",
   "version": "0.0.1",
   "description": "A Lisp syntax for JavaScript",
+  "author": "Paul Fernandez",
+  "license": "ISC",
   "type": "module",
-  "main": "server.js",
-  "scripts": {
-    "start": "nodemon --ignore src"
-  },
+  "keywords": ["javascript", "lisp"],
+  "homepage": "https://github.com/pfernandez/expressive#readme",
+  "bugs": { "url": "https://github.com/pfernandez/expressive/issues" },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pfernandez/expressive.git"
   },
-  "keywords": [
-    "javascript",
-    "lisp"
-  ],
-  "author": "Paul Fernandez",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/pfernandez/expressive/issues"
+
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon --ignore src"
   },
-  "homepage": "https://github.com/pfernandez/expressive#readme",
+
   "devDependencies": {
     "connect-livereload": "^0.6.1",
     "eslint": "^7.32.0",
@@ -28,7 +25,45 @@
     "livereload": "^0.9.3",
     "nodemon": "^2.0.14"
   },
-  "dependencies": {
-    "eslint-config-prettier": "^8.3.0"
+
+  "eslintConfig": {
+    "root": true,
+    "parserOptions": { "ecmaVersion": "latest", "sourceType": "module" },
+    "env": { "browser": true, "es2021": true },
+    "extends": ["eslint:recommended"],
+
+    "rules": {
+      "array-bracket-newline": ["warn", "never"],
+      "arrow-parens": ["warn", "as-needed"],
+      "comma-spacing": ["warn", { "before": false, "after": true }],
+      "comma-style": ["warn", "last"],
+      "computed-property-spacing": ["warn", "never"],
+      "eol-last": ["warn", "always"],
+      "indent": ["warn", 2, {
+          "ArrayExpression": "first",
+          "ImportDeclaration": "first",
+          "ObjectExpression": "first",
+          "VariableDeclarator": { "var": 2, "let": 2, "const": 3 }
+      }],
+      "linebreak-style": ["error", "unix"],
+      "max-len": ["warn", {
+        "code": 80,
+        "ignoreUrls": true
+      }],
+      "no-extra-parens": "warn",
+      "no-multiple-empty-lines": ["warn", { "max": 2, "maxEOF": 1 }],
+      "no-trailing-spaces": "warn",
+      "no-unused-vars": ["warn", { "args": "all", "argsIgnorePattern": "^_" }],
+      "object-curly-newline": ["warn", "never"],
+      "object-curly-spacing": ["warn", "always", {
+          "arraysInObjects": false,
+          "objectsInObjects": false
+      }],
+      "operator-linebreak": ["warn", "before"],
+      "prefer-rest-params": "warn",
+      "quote-props": ["warn", "as-needed"],
+      "quotes": ["warn", "single"],
+      "semi": ["warn", "never"]
+    }
   }
 }
