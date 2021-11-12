@@ -40,30 +40,35 @@
       "computed-property-spacing": ["warn", "never"],
       "eol-last": ["warn", "always"],
       "indent": ["warn", 2, {
-          "ArrayExpression": "first",
-          "ImportDeclaration": "first",
-          "ObjectExpression": "first",
-          "VariableDeclarator": { "var": 2, "let": 2, "const": 3 }
+        "ImportDeclaration": "first",
+        "VariableDeclarator": { "var": 2, "let": 2, "const": 3 }
       }],
       "linebreak-style": ["error", "unix"],
-      "max-len": ["warn", {
-        "code": 80,
-        "ignoreUrls": true
-      }],
       "no-extra-parens": "warn",
       "no-multiple-empty-lines": ["warn", { "max": 2, "maxEOF": 1 }],
       "no-trailing-spaces": "warn",
+      "no-undef": "error",
       "no-unused-vars": ["warn", { "args": "all", "argsIgnorePattern": "^_" }],
-      "object-curly-newline": ["warn", "never"],
+      "object-curly-newline": ["warn", {
+        "ObjectExpression": "never",
+        "ObjectPattern": "never",
+        "ImportDeclaration": "never",
+        "ExportDeclaration": "always"
+      }],
       "object-curly-spacing": ["warn", "always", {
-          "arraysInObjects": false,
-          "objectsInObjects": false
+        "arraysInObjects": false,
+        "objectsInObjects": false
       }],
       "operator-linebreak": ["warn", "before"],
       "prefer-rest-params": "warn",
       "quote-props": ["warn", "as-needed"],
       "quotes": ["warn", "single"],
-      "semi": ["warn", "never"]
+      "semi": ["warn", "never"],
+      "space-before-function-paren": ["warn", {
+        "anonymous": "never",
+        "asyncArrow": "always",
+        "named": "never"
+      }]
     }
   }
 }

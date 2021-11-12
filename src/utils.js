@@ -16,7 +16,12 @@ export const isFunction = x => typeof x === 'function'
 
 export const isObject = x => typeof x === 'object' && !isArray(x) && x !== null
 
+export const isIterable = x =>
+  x != null && typeof x[Symbol.iterator] === 'function'
+
 export const isData = x => !(isArray(x) && isFunction(first(x)))
+
+export const isElement = x => x instanceof Element
 
 export const some = (a, f) => a.some(f)
 
@@ -31,15 +36,17 @@ export const map = (a, f) => a.map(f)
 export const mapObject = (o, f) =>
   reduce(entries(o), (_, [k, v]) => f(k, v), {})
 
-export const forEach = (a, f) => a.forEach(f)
+export const push = (x, a) => a.push(x)
 
-export const each = forEach
+export const each = (a, f) => a.forEach(f)
 
-export const apply = (f, a) => f.apply(undefined, a)
+export const apply = (f, a) => f.apply(null, a)
 
 export const assoc = (x, a) => isArray(a)
   ? a.find(y => isArray(y) ? y[0] === x : undefined)
   : isObject(x) ? a[x] : undefined
+
+export const partial = (f, ...rest) => f.bind(null, ...rest)
 
 export const reverse = list => [...list].reverse()
 
@@ -52,17 +59,29 @@ export const λ = fn
 
 export const add = (x, y) => x + y
 
-export const createElement = name => document.createElement(name)
-
 export const assign = (target, source) => Object.assign(target, source)
 
-export const assignDeep = (target, source) => reduce(
-  entries(source),
-  (t, [k, v]) => (t[k] = v, isObject(v) && assignDeep(t[k], v), t),
-  target)
+export const assignDeep = (target, source) => reduce(entries(source),
+  (t, [k, v]) => (t[k] = v, isObject(v) && assignDeep(t[k], v), t), target)
 
-export const append = (parent, ...elements) => parent.append(...elements)
+export const createElement = name => document.createElement(name)
+
+export const createFragment = () => document.createDocumentFragment()
+
+export const getElementById = id => document.getElementById(id)
+
+export const querySelector = selector => document.querySelector(selector)
+
+export const append = (parent, ...elements) =>
+  (parent.append(...elements), parent)
+
+export const parentElement = child => child.parentElement
 
 export const replaceChildren = (parent, ...children) =>
-  parent.replaceChildren(...children)
+  (parent.replaceChildren(...children), parent)
+
+export const replaceWith = (element, ...nodes) => element.replaceWith(...nodes)
+
+export const walk = (node = document.body, f = log, k = 'childNodes') =>
+  f(node) && each(node[k], n => walk(n, f))
 
