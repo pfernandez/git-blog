@@ -5,11 +5,10 @@ utils.each(
   ([k, v]) => window[k] = v)
 
 
-evaluate(
-  [log,
-    1,
-    [add, 1, 1],
-    [add,
-      1,
-      [add, 1, 1]]])
-
+// evaluate(
+//  [log,
+//    1,
+//    [add, 1, 1],
+//    [add,
+//      1,
+//      [add, 1, 1]]])

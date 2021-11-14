@@ -68,7 +68,8 @@
         "anonymous": "never",
         "asyncArrow": "always",
         "named": "never"
-      }]
+      }],
+      "spaced-comment": ["warn", "always"]
     }
   }
 }

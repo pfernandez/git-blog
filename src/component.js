@@ -37,7 +37,7 @@ const { main, h1, pre, button, fragment } = reduce(
  *    React Fiber algorithm.
  */
 const render = (tree, root = document.body) => {
-  walk(tree, node => log(node))  // maybe this will be useful
+  // walk(tree, node => log(node))  // maybe this will be useful
   replaceChildren(root, tree)  // final step: the actual render
 }
 
