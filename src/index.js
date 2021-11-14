@@ -3,7 +3,9 @@ import * as component from './component.js'
 utils.each(
   [...utils.entries(utils), ...utils.entries(component)],
   ([k, v]) => window[k] = v)
+const {log} = utils
 
+log(JSON.stringify(tree, null, 2))
 
 // evaluate(
 //  [log,

@@ -8,16 +8,24 @@ export const rest = ([_, ...x]) => x.length ? x : nil
 
 export const last = a => first(a.slice(-1))
 
-export const exists = x => typeof x !== undefined
+export const keys = x => Object.keys(x)
+
+export const length = x => x.length
+
+export const bool = x => !!x
+
+export const isType = (x, type) => typeof x === type
+
+export const exists = x => !isType(x, 'undefined')
 
 export const isArray = x => Array.isArray(x)
 
-export const isFunction = x => typeof x === 'function'
+export const isFunction = x => isType(x, 'function')
 
-export const isObject = x => typeof x === 'object' && !isArray(x) && x !== null
+export const isObject = x => isType(x, 'object') && !isArray(x) && x !== null
 
-export const isIterable = x =>
-  x != null && typeof x[Symbol.iterator] === 'function'
+export const isEmpty = x =>
+  isArray(x) ? !length(x) : isObject(x) ? !length(keys(x)) : bool(x)
 
 export const isData = x => !(isArray(x) && isFunction(first(x)))
 
@@ -33,8 +41,7 @@ export const reduce = (a, f, v) => a.reduce(f, v)
 
 export const map = (a, f) => a.map(f)
 
-export const mapObject = (o, f) =>
-  reduce(entries(o), (_, [k, v]) => f(k, v), {})
+export const omap = (o, f) => reduce(entries(o), (_, [k, v]) => f(k, v), {})
 
 export const push = (x, a) => a.push(x)
 
@@ -48,7 +55,7 @@ export const assoc = (x, a) => isArray(a)
 
 export const partial = (f, ...rest) => f.bind(null, ...rest)
 
-export const reverse = list => [...list].reverse()
+export const reverse = a => [...a].reverse()
 
 export const evaluate = ([f, ...a]) =>
   apply(f, map(a, x => isData(x) ? x : evaluate(x)))
@@ -83,5 +90,5 @@ export const replaceChildren = (parent, ...children) =>
 export const replaceWith = (element, ...nodes) => element.replaceWith(...nodes)
 
 export const walk = (node = document.body, f = log, k = 'childNodes') =>
-  f(node) && each(node[k], n => walk(n, f))
+  f(node) && isArray(node) ? each(node[k], n => walk(n, f)) : node
 
