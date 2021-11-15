@@ -5,7 +5,7 @@ utils.each(
   ([k, v]) => window[k] = v)
 const {log} = utils
 
-log(JSON.stringify(tree, null, 2))
+//log(JSON.stringify(tree, null, 2))
 
 // evaluate(
 //  [log,

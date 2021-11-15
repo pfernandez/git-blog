@@ -90,5 +90,5 @@ export const replaceChildren = (parent, ...children) =>
 export const replaceWith = (element, ...nodes) => element.replaceWith(...nodes)
 
 export const walk = (node = document.body, f = log, k = 'childNodes') =>
-  f(node) && isArray(node) ? each(node[k], n => walk(n, f)) : node
+  f(node) && each(node[k], n => walk(n, f))
 
