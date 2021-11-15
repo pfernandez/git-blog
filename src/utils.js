@@ -87,7 +87,11 @@ export const parentElement = child => child.parentElement
 export const replaceChildren = (parent, ...children) =>
   (parent.replaceChildren(...children), parent)
 
-export const replaceWith = (element, ...nodes) => element.replaceWith(...nodes)
+export const render = (element, parentSelector) =>
+  replaceChildren(querySelector(parentSelector), element)
+
+export const replaceElement = (selector, ...nodes) =>
+  querySelector(selector).replaceWith(...nodes)
 
 export const walk = (node = document.body, f = log, k = 'childNodes') =>
   f(node) && each(node[k], n => walk(n, f))
