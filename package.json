@@ -30,7 +30,6 @@
     "root": true,
     "parserOptions": { "ecmaVersion": "latest", "sourceType": "module" },
     "env": { "browser": true, "es2021": true },
-    "extends": ["eslint:recommended"],
 
     "rules": {
       "array-bracket-newline": ["warn", "never"],
@@ -55,8 +54,8 @@
       "no-undef": "off",
       "no-unused-vars": ["warn", { "args": "all", "argsIgnorePattern": "^_" }],
       "object-curly-newline": ["warn", {
-        "ObjectExpression": "consistent",
-        "ObjectPattern": "consistent",
+        "ObjectExpression":  { "consistent": true },
+        "ObjectPattern": { "consistent": true },
         "ImportDeclaration": "never",
         "ExportDeclaration": "always"
       }],

@@ -99,3 +99,8 @@ export const replaceElement = (selector, ...nodes) =>
 export const walk = (node = document.body, f = log, k = 'childNodes') =>
   f(node) && each(node[k], n => walk(n, f))
 
+export const getElementsByProperties = o =>
+  o.id ? [document.getElementById(o.id)]
+    : o.className ? document.getElementsByClassName(o.className)
+      : document.getElementsByTagName(o.tagName)
+
