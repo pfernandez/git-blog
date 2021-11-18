@@ -87,9 +87,6 @@ export const parentElement = child => child.parentElement
 export const replaceChildren = (parent, ...children) =>
   (parent.replaceChildren(...children), parent)
 
-export const render = (element, parentSelector) =>
-  replaceChildren(querySelector(parentSelector), element)
-
 export const replaceWith = (element, ...nodes) =>
   element.replaceWith(...nodes)
 
@@ -103,4 +100,35 @@ export const getElementsByProperties = o =>
   o.id ? [document.getElementById(o.id)]
     : o.className ? document.getElementsByClassName(o.className)
       : document.getElementsByTagName(o.tagName)
+
+export const {main, div, p, button} = reduce(
+  ['main', 'div', 'p', 'button'],
+  (functions, tagName) =>
+    ({...functions, [tagName]: (x, ...nodes) => create(tagName, x, ...nodes)}),
+  {fragment: (...nodes) => append(createFragment(), ...nodes)})
+
+let parent = null
+
+export const create = (tagName, x, ...children) => {
+  const element = createElement(tagName)
+  const liveElements = [...getElementsByProperties({...x, tagName})]
+
+  if(isObject(x) && !isElement(x))
+    assignDeep(element, x).append(...children)
+  else if(x)
+    element.append(x, ...children)
+  else element.append(...children)
+
+  liveElements.forEach(el => {
+    if(el) {
+      if(!parent)
+        parent = el.parentElement
+      if(el === parent) {
+        log('Replacing', el)
+        replaceWith(el, element)
+        parent = null
+      }}})
+
+  return element
+}
 
