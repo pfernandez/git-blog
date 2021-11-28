@@ -1,59 +1,43 @@
 /** @module expressive/elements */
 
-let temp = null, indent = '*'
+const { isArray } = Array,
+      { keys, entries } = Object
 
-const visualizeTree = root =>
-  walk(root, node => (console.log(indent, node), indent += '*'))
+const propertyStore = new Map()
 
-const shouldReplace = liveElements => {
+const isObject = x =>
+  typeof x === 'object'
+    && !isArray(x)
+    && x !== null
 
-  /**
-   * TODO: The following works but
-   *   - only when a single matching live element is found
-   *   - queries the DOM for every element in the subtree
-   *   - makes me feel dirty inside
-   */
-  for(const el of liveElements) {
-    if(!temp) {
-      temp = el.parentElement
-    }
-
-    if(el === temp) {
-      console.log('ready to render!')
-
-      temp = null
-      // return true
-    } }
-
-  return true
-}
-
-const isObject = x => typeof x === 'object' && !Array.isArray(x) && x !== null
+const shallowEqual = (a, b) =>
+  [...keys(a), ...keys(b)].every(k => a[k] === b[k])
 
 const normalizeArguments = (x, children) =>
   isObject(x) && !(x instanceof Element)
-    ? [x, children] : [{}, [x, ...children]]
+    ? [x, children]
+    : [{}, [x, ...children]]
 
-const getMatchingDOMElements = (tagName, properties) =>
-  properties.id ? [document.getElementById(properties.id)]
-    : [...properties.className
-      ? document.getElementsByClassName(properties.className)
-      : document.getElementsByTagName(tagName)]
+const getElementSelector = (tagName, { id, className }) =>
+  tagName + id ? `#${id}`
+    : className ? `.${className.split(' ').filter(s => s).join('.')}`
+      : ''
 
-const assignProperties = (target, source) =>
-  Object.keys(source).length
-    ? Object.entries(source).reduce((t, [k, v]) =>
-      (t[k] = v, isObject(v) && assignProperties(t[k], v), t), target)
-    : undefined
+const assignProperties = (element, properties) =>
+  (keys(properties).length
+    && entries(properties).reduce((el, [k, v]) =>
+      (el[k] = v, isObject(v) && assignProperties(el[k], v), el),
+    element),
+  element)
 
-const appendSubtree = (element, properties, children) =>
-  (assignProperties(element, properties), element.append(...children))
+const appendSubtree = (element, properties, children) => (
+  assignProperties(element, properties),
+  element.append(...children),
+  element)
 
-const replaceElements = (liveElements, element, x, children) =>
-  liveElements.forEach(el => {
-    const newElement = element.cloneNode(true)
-    appendSubtree(newElement, { ...x, className: 'replaced' }, children)
-    el.replaceWith(newElement)})
+const replaceElements = (elements, properties, children) =>
+  elements.forEach(el => el.replaceWith(
+    appendSubtree(el.cloneNode(true), properties, children)))
 
 /**
  * Generates an HTMLElement with children and inserts it into the DOM.
@@ -65,17 +49,23 @@ const replaceElements = (liveElements, element, x, children) =>
  * @returns HTMLElement
  */
 const create = (tagName, x, ...children) => {
-  const [properties, childNodes] = normalizeArguments(x, children)
+  const [properties, childNodes] = normalizeArguments(x, children),
+        selector = getElementSelector(tagName, properties),
+        lastProperties = propertyStore.get(selector),
+        liveElements = []
 
-  const newElement = document.createElement(tagName)
-  appendSubtree(newElement, properties, childNodes)
-
-  const liveElements = getMatchingDOMElements(tagName, properties)
-  if(liveElements.length) {
-    replaceElements(liveElements, newElement, properties, childNodes)
+  if(lastProperties && !shallowEqual(properties, lastProperties)) {
+    liveElements.concat(...document.querySelectorAll(selector))
+    replaceElements(liveElements, properties, children)
+    propertyStore.set(selector, properties)
   }
 
-  return newElement
+  return appendSubtree(
+    liveElements.length
+      ? liveElements[0].cloneNode()
+      : document.createElement(tagName),
+    properties,
+    childNodes)
 }
 
 export const {
