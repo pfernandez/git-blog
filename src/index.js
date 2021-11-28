@@ -1,14 +1,25 @@
-import { body, button, div, main, p } from './elements.js'
+import { body, button, div, h1, main, p, pre } from './elements.js'
+
 
 const counter = (count = 0) =>
   div(
-    p(count),
-    button({ onclick: () => counter(count + 1) }, 'Increment'))
+    pre({
+      style:
+      { fontSize: '4em',
+        margin: '20px 0' },
+      innerText: count
+    }),
+    button(
+      { innerText: 'Increment',
+        onclick: () => counter(count + 1) }))
 
-const style = { color: '#eee', background: '#222', }
-
-body({ style },
-  main('Recursive counter',
+body(
+  { style:
+    { background: '#222',
+      color: '#eee',
+      textAlign: 'center' } },
+  main(
+    h1('Recursive counter'),
     counter(),
     counter()))
 

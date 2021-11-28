@@ -3,12 +3,10 @@
 const { isArray } = Array,
       { keys, entries } = Object
 
-const propertyStore = new Map()
+const store = new Map()
 
 const isObject = x =>
-  typeof x === 'object'
-    && !isArray(x)
-    && x !== null
+  typeof x === 'object' && !isArray(x) && x !== null
 
 const shallowEqual = (a, b) =>
   [...keys(a), ...keys(b)].every(k => a[k] === b[k])
@@ -19,9 +17,10 @@ const normalizeArguments = (x, children) =>
     : [{}, [x, ...children]]
 
 const getElementSelector = (tagName, { id, className }) =>
-  tagName + id ? `#${id}`
-    : className ? `.${className.split(' ').filter(s => s).join('.')}`
-      : ''
+  tagName
+    + (id ? `#${id}`
+      : className ? `.${className.split(' ').filter(s => s).join('.')}`
+        : '')
 
 const assignProperties = (element, properties) =>
   (keys(properties).length
@@ -51,22 +50,25 @@ const replaceElements = (elements, properties, children) =>
 const create = (tagName, x, ...children) => {
   const [properties, childNodes] = normalizeArguments(x, children),
         selector = getElementSelector(tagName, properties),
-        lastProperties = propertyStore.get(selector),
+        lastProperties = store.get(selector),
         liveElements = []
 
   if(lastProperties && !shallowEqual(properties, lastProperties)) {
-    liveElements.concat(...document.querySelectorAll(selector))
-    replaceElements(liveElements, properties, children)
-    propertyStore.set(selector, properties)
-  }
 
-  return appendSubtree(
-    liveElements.length
-      ? liveElements[0].cloneNode()
-      : document.createElement(tagName),
+    console.log('replacing', tagName, 'properties', properties)
+
+    liveElements.push(...document.querySelectorAll(selector))
+    replaceElements(liveElements, properties, childNodes)
+    store.set(selector, properties)
+  } else if (!lastProperties)
+    store.set(selector, properties)
+
+  const element = appendSubtree(
+    document.createElement(tagName),
     properties,
     childNodes)
-}
+
+  return element }
 
 export const {
   body, fragment,
