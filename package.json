@@ -32,7 +32,7 @@
     "env": { "browser": true, "es2021": true },
 
     "rules": {
-      "array-bracket-newline": ["warn", "never"],
+      "array-bracket-newline": ["warn", "consistent"],
       "arrow-parens": ["warn", "as-needed"],
       "comma-spacing": ["warn", { "before": false, "after": true }],
       "comma-style": ["warn", "last"],
@@ -42,29 +42,24 @@
         "ImportDeclaration": "first",
         "VariableDeclarator": { "var": 2, "let": 2, "const": 3 }
       }],
-      "key-spacing": ["warn", { "align": "value"}],
       "linebreak-style": ["error", "unix"],
       "no-extra-parens": "warn",
       "no-multiple-empty-lines": ["warn", { "max": 2, "maxEOF": 1 }],
       "no-multi-spaces": ["warn", {
         "ignoreEOLComments": true,
-        "exceptions": { "Property": true }
+        "exceptions": { "Property": false }
       }],
       "no-trailing-spaces": "warn",
       "no-undef": "off",
       "no-unused-vars": ["warn", { "args": "all", "argsIgnorePattern": "^_" }],
-      "object-curly-newline": ["warn", {
-        "ObjectExpression":  { "consistent": true },
-        "ObjectPattern": { "consistent": true },
-        "ImportDeclaration": "never",
-        "ExportDeclaration": "always"
-      }],
-      "object-curly-spacing": ["warn", "never"],
+      "object-curly-newline": ["warn", { "consistent": true }],
+      "object-curly-spacing": ["warn", "always"],
       "operator-linebreak": ["warn", "before"],
       "prefer-rest-params": "warn",
       "quote-props": ["warn", "as-needed"],
       "quotes": ["warn", "single"],
       "semi": ["warn", "never"],
+      "sort-imports": "warn",
       "space-before-function-paren": ["warn", {
         "anonymous": "never",
         "asyncArrow": "always",

@@ -1,16 +1,14 @@
-import * as utils from './utils.js'
-import * as component from './component.js'
-utils.each(
-  [...utils.entries(utils), ...utils.entries(component)],
-  ([k, v]) => window[k] = v)
-const {log} = utils
+import { body, button, div, main, p } from './elements.js'
 
-//log(JSON.stringify(tree, null, 2))
+const counter = (count = 0) =>
+  div(
+    p(count),
+    button({ onclick: () => counter(count + 1) }, 'Increment'))
 
-// evaluate(
-//  [log,
-//    1,
-//    [add, 1, 1],
-//    [add,
-//      1,
-//      [add, 1, 1]]])
+const style = { color: '#eee', background: '#222', }
+
+body({ style },
+  main('Recursive counter',
+    counter(),
+    counter()))
+
