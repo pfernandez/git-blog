@@ -11,10 +11,14 @@ const isObject = x =>
 const shallowEqual = (a, b) =>
   [...keys(a), ...keys(b)].every(k => a[k] === b[k])
 
-const normalizeArguments = (x, children) =>
-  isObject(x) && !(x instanceof Element)
-    ? [x, children]
-    : [{}, [x, ...children]]
+const normalizeArguments = (x, childNodes) =>
+  ((x instanceof Element || !isObject(x))
+    && (childNodes = [x, ...childNodes], x = {}),
+  childNodes.reduce((a, node) =>
+    node instanceof Element
+      ? [...a, node]
+      : [{ ...a[0], innerText: node }, ...a.slice(1)],
+  [x]))
 
 const getElementSelector = (tagName, { id, className }) =>
   tagName
@@ -23,20 +27,19 @@ const getElementSelector = (tagName, { id, className }) =>
         : '')
 
 const assignProperties = (element, properties) =>
-  (keys(properties).length
-    && entries(properties).reduce((el, [k, v]) =>
-      (el[k] = v, isObject(v) && assignProperties(el[k], v), el),
-    element),
-  element)
-
-const appendSubtree = (element, properties, children) => (
-  assignProperties(element, properties),
-  element.append(...children),
+  entries(properties).reduce((el, [k, v]) =>
+    (el[k] = v, isObject(v) && assignProperties(el[k], v), el),
   element)
 
 const replaceElements = (elements, properties, children) =>
   elements.forEach(el => el.replaceWith(
-    appendSubtree(el.cloneNode(true), properties, children)))
+    appendSubtree(el.cloneNode(), properties, ...children)))
+
+const appendChildren = (element, children) =>
+  (element.append(...children), element)
+
+const appendSubtree = (element, properties, ...children) =>
+  appendChildren(assignProperties(element, properties), children)
 
 /**
  * Generates an HTMLElement with children and inserts it into the DOM.
@@ -44,36 +47,32 @@ const replaceElements = (elements, properties, children) =>
  * @param {string} tagName
  * @param {Partial<HTMLElement> | string | number} [x] (optional) HTML
  * properties, i.e. `{ className, style, onclick }`
- * @param {...(HTMLElement | string | number)} [children]
+ * @param {...(HTMLElement | string | number)} [childNodes]
  * @returns HTMLElement
  */
-const create = (tagName, x, ...children) => {
-  const [properties, childNodes] = normalizeArguments(x, children),
+const create = (tagName, x, ...childNodes) => {
+  tagName = tagName.toLowerCase()
+  const [properties, ...children] = normalizeArguments(x, childNodes),
         selector = getElementSelector(tagName, properties),
-        lastProperties = store.get(selector),
-        liveElements = []
+        lastProperties = store.get(selector)
 
-  if(lastProperties && !shallowEqual(properties, lastProperties)) {
-
-    console.log('replacing', tagName, 'properties', properties)
-
-    liveElements.push(...document.querySelectorAll(selector))
-    replaceElements(liveElements, properties, childNodes)
+  if(!lastProperties)
     store.set(selector, properties)
-  } else if (!lastProperties)
-    store.set(selector, properties)
+  else if (!shallowEqual(properties, lastProperties))
+    store.set(selector, properties),
+    replaceElements(document.querySelectorAll(selector), properties, children)
 
-  const element = appendSubtree(
-    document.createElement(tagName),
+  return appendSubtree(
+    ['html', 'head', 'body'].includes(tagName)
+      ? 'html' === tagName ? document.documentElement : document[tagName]
+      : document.createElement(tagName),
     properties,
-    childNodes)
-
-  return element }
+    ...children)}
 
 export const {
-  body, fragment,
+  doctype, fragment,
   a, abbr, address, area, article, aside, audio, b, base,
-  bdi, bdo, blockquote, br, button, canvas, caption,
+  bdi, bdo, blockquote, body, br, button, canvas, caption,
   cite, code, col, colgroup, data, datalist, dd, del, details,
   dfn, dialog, div, dl, dt, em, embed, fieldset, figcaption,
   figure, footer, form, h1, h2, h3, h4, h5, h6, head,
@@ -87,7 +86,7 @@ export const {
   track, u, ul, video, wbr
 } = [
   'a', 'abbr', 'address', 'area', 'article', 'aside', 'audio', 'b', 'base',
-  'bdi', 'bdo', 'blockquote', 'br', 'button', 'canvas', 'caption',
+  'bdi', 'bdo', 'blockquote', 'body', 'br', 'button', 'canvas', 'caption',
   'cite', 'code', 'col', 'colgroup', 'data', 'datalist', 'dd', 'del', 'details',
   'dfn', 'dialog', 'div', 'dl', 'dt', 'em', 'embed', 'fieldset', 'figcaption',
   'figure', 'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'head',
@@ -101,19 +100,14 @@ export const {
   'track', 'u', 'ul', 'var', 'video', 'wbr'
 ].reduce(
   (functions, tagName) =>
-    ({
-      ...functions,
-      [tagName]: (x, ...nodes) => create(tagName, x, ...nodes)
-    }),
+    ({ ...functions,
+      [tagName]: (x, ...nodes) => create(tagName, x, ...nodes) }),
   {
-    body: (x, ...children) => {
-      const [properties, childNodes] = normalizeArguments(x, children)
-      appendSubtree(document.body, properties, childNodes)
-      return document.body
-    },
-
-    fragment: (...children) =>
-      document.createDocumentFragment().append(...children)
+    doctype: (qualifiedName, publicId = '', systemId = '') =>
+      document.implementation.createDocumentType(
+        qualifiedName, publicId, systemId),
+    fragment: (...childNodes) =>
+      appendChildren(document.createDocumentFragment(), childNodes)
   })
 
 /**
