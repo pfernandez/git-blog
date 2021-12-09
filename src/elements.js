@@ -111,9 +111,6 @@ const {
       appendChildren(document.createDocumentFragment(), childNodes),
   })
 
-export const globalize = o => entries(o).forEach(([k, v]) =>
-  window ? window[k] = v : global[k] = v)
-
 export default {
   doctype, fragment,
   a, abbr, address, area, article, aside, audio, b, base,
