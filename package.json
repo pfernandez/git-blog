@@ -75,5 +75,6 @@
           "named": "never"
         }],
         "spaced-comment": ["warn", "always"],
-        "space-in-parens": "warn"
+        "space-in-parens": "warn",
+        "space-infix-ops": "warn"
     }}}

@@ -1,15 +1,22 @@
 /** @module expressive/elements */
+import { log } from './utils.js'
 
 const { isArray } = Array,
       { keys, entries } = Object
 
 const store = new Map()
 
-const isObject = x =>
-  typeof x === 'object' && !isArray(x) && x !== null
+const isType = (x, type) => typeof x === type
 
-const shallowEqual = (a, b) =>
-  [...keys(a), ...keys(b)].every(k => a[k] === b[k])
+const isObject = x =>
+  isType(x, 'object') && !isArray(x) && x !== null
+
+const equal = (x, y) =>
+  log('comparing', x, y,
+    isType(x, typeof y) && (
+      isType(x, 'object') && x !== null
+        ? [...keys(x), ...keys(y)].every(k => equal(x[k], y[k]))
+        : isType(x, 'function') || x === y))
 
 const normalizeArguments = (x, childNodes) =>
   ((x instanceof Element || !isObject(x))
@@ -31,15 +38,15 @@ const assignProperties = (element, properties) =>
     (el[k] = v, isObject(v) && assignProperties(el[k], v), el),
   element)
 
-const replaceElements = (elements, properties, children) =>
-  elements.forEach(el => el.replaceWith(
-    appendSubtree(el.cloneNode(), properties, ...children)))
-
 const appendChildren = (element, children) =>
   (element.append(...children), element)
 
 const appendSubtree = (element, properties, ...children) =>
   appendChildren(assignProperties(element, properties), children)
+
+const replaceElements = (elements, properties, children) =>
+  elements.forEach(el => el.replaceWith(
+    appendSubtree(el.cloneNode(), properties, ...children)))
 
 /**
  * Generates an HTMLElement with children and inserts it into the DOM.
@@ -58,8 +65,9 @@ const create = (tagName, x, ...childNodes) => {
 
   if(!lastProperties)
     store.set(selector, properties)
-  else if (!shallowEqual(properties, lastProperties))
+  else if (!equal(properties, lastProperties))
     store.set(selector, properties),
+    console.log('replacing', tagName, properties),
     replaceElements(document.querySelectorAll(selector), properties, children)
 
   return appendSubtree(
