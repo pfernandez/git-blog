@@ -43,38 +43,35 @@
       "eol-last": ["warn", "always"],
       "indent": ["warn", 2, {
         "ImportDeclaration": "first",
-        "VariableDeclarator": {
-          "var": 2,
-          "let": 2,
-          "const": 3
-        }}],
-        "linebreak-style": ["error", "unix"],
-        "no-extra-parens": "warn",
-        "no-multiple-empty-lines": ["warn", { "max": 2, "maxEOF": 1 }],
-        "no-multi-spaces": ["warn", {
-          "ignoreEOLComments": true,
-          "exceptions": { "Property": false }
-        }],
-        "no-trailing-spaces": "warn",
-        "no-undef": "off",
-        "no-unused-vars": ["warn", {
-          "args": "all",
-          "argsIgnorePattern": "^_"
-        }],
-        "object-curly-newline": ["warn", { "consistent": true }],
-        "object-curly-spacing": ["warn", "always"],
-        "operator-linebreak": ["warn", "before"],
-        "prefer-rest-params": "warn",
-        "quote-props": ["warn", "as-needed"],
-        "quotes": ["warn", "single"],
-        "semi": ["warn", "never"],
-        "sort-imports": "warn",
-        "space-before-function-paren": ["warn", {
-          "anonymous": "never",
-          "asyncArrow": "always",
-          "named": "never"
-        }],
-        "spaced-comment": ["warn", "always"],
-        "space-in-parens": "warn",
-        "space-infix-ops": "warn"
+        "VariableDeclarator": { "var": 2, "let": 2, "const": 3 }
+      }],
+      "linebreak-style": ["error", "unix"],
+      "no-extra-parens": "warn",
+      "no-multiple-empty-lines": ["warn", { "max": 2, "maxEOF": 1 }],
+      "no-multi-spaces": ["warn", {
+        "ignoreEOLComments": true,
+        "exceptions": { "Property": false }
+      }],
+      "no-trailing-spaces": "warn",
+      "no-undef": "off",
+      "no-unused-vars": ["warn", {
+        "args": "all",
+        "argsIgnorePattern": "^_"
+      }],
+      "object-curly-newline": ["warn", { "consistent": true }],
+      "object-curly-spacing": ["warn", "always"],
+      "operator-linebreak": ["warn", "before"],
+      "prefer-rest-params": "warn",
+      "quote-props": ["warn", "as-needed"],
+      "quotes": ["warn", "single"],
+      "semi": ["warn", "never"],
+      "sort-imports": "warn",
+      "space-before-function-paren": ["warn", {
+        "anonymous": "never",
+        "asyncArrow": "always",
+        "named": "never"
+      }],
+      "spaced-comment": ["warn", "always"],
+      "space-in-parens": "warn",
+      "space-infix-ops": "warn"
     }}}

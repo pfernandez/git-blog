@@ -1,24 +1,20 @@
-/** @module expressive/elements */
-import { log } from './utils.js'
-
 const { isArray } = Array,
       { keys, entries } = Object
 
 const store = new Map()
 
-const isType = (x, type) => typeof x === type
+const isObject = x => typeof x === 'object' && !isArray(x) && x !== null
 
-const isObject = x =>
-  isType(x, 'object') && !isArray(x) && x !== null
+const changed = (x, y) =>
+  typeof x !== typeof y
+    || (typeof x === 'object' && x !== null
+      ? keys({ ...x, ...y }).some(k => changed(x[k], y[k]))
+      // Function references always change, so ignore them. In
+      // `assignProperties` we point to the last stored function instead.
+      : typeof x !== 'function'
+        && x !== y)
 
-const equal = (x, y) =>
-  log('comparing', x, y,
-    isType(x, typeof y) && (
-      isType(x, 'object') && x !== null
-        ? [...keys(x), ...keys(y)].every(k => equal(x[k], y[k]))
-        : isType(x, 'function') || x === y))
-
-const normalizeArguments = (x, childNodes) =>
+const disambiguate = (x, childNodes) =>
   ((x instanceof Element || !isObject(x))
     && (childNodes = [x, ...childNodes], x = {}),
   childNodes.reduce((a, node) =>
@@ -27,53 +23,59 @@ const normalizeArguments = (x, childNodes) =>
       : [{ ...a[0], innerText: node }, ...a.slice(1)],
   [x]))
 
-const getElementSelector = (tagName, { id, className }) =>
+const getSelector = (tagName, { id, className }) =>
   tagName
     + (id ? `#${id}`
       : className ? `.${className.split(' ').filter(s => s).join('.')}`
         : '')
 
-const assignProperties = (element, properties) =>
+const assignProperties = (element, selector, properties) =>
   entries(properties).reduce((el, [k, v]) =>
-    (el[k] = v, isObject(v) && assignProperties(el[k], v), el),
+    (el[k] = typeof v === 'function' ? () => store.get(selector)[k]() : v,
+    isObject(v) && assignProperties(el[k], selector, v),
+    el),
   element)
 
 const appendChildren = (element, children) =>
   (element.append(...children), element)
 
-const appendSubtree = (element, properties, ...children) =>
-  appendChildren(assignProperties(element, properties), children)
+const appendSubtree = (element, selector, properties, ...children) =>
+  appendChildren(assignProperties(element, selector, properties), children)
 
-const replaceElements = (elements, properties, children) =>
-  elements.forEach(el => el.replaceWith(
-    appendSubtree(el.cloneNode(), properties, ...children)))
+const replaceElements = (selector, properties, children) =>
+  document.querySelectorAll(selector).forEach(el => el.replaceWith(
+    appendSubtree(el.cloneNode(), selector, properties, ...children)))
 
 /**
+ * @description
  * Generates an HTMLElement with children and inserts it into the DOM.
  *
  * @param {string} tagName
- * @param {Partial<HTMLElement> | string | number} [x] (optional) HTML
- * properties, i.e. `{ className, style, onclick }`
+ *
+ * @param {Partial<HTMLElement> | string | number} [nodeOrProperties]
+ * Either an object of [HTMLElement properties](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement#properties)
+ * or a child node.
+ *
  * @param {...(HTMLElement | string | number)} [childNodes]
+ *
  * @returns HTMLElement
  */
-const create = (tagName, x, ...childNodes) => {
-  tagName = tagName.toLowerCase()
-  const [properties, ...children] = normalizeArguments(x, childNodes),
-        selector = getElementSelector(tagName, properties),
+const create = (tagName, nodeOrProperties, ...childNodes) => {
+  const [properties, ...children] = disambiguate(nodeOrProperties, childNodes),
+        selector = getSelector(tagName, properties),
         lastProperties = store.get(selector)
 
-  if(!lastProperties)
-    store.set(selector, properties)
-  else if (!equal(properties, lastProperties))
-    store.set(selector, properties),
-    console.log('replacing', tagName, properties),
-    replaceElements(document.querySelectorAll(selector), properties, children)
+  lastProperties
+    && changed(properties, lastProperties)
+    && replaceElements(selector, properties, children)
+
+  store.set(selector, properties)
 
   return appendSubtree(
     ['html', 'head', 'body'].includes(tagName)
       ? 'html' === tagName ? document.documentElement : document[tagName]
       : document.createElement(tagName),
+    selector,
     properties,
     ...children)}
 
@@ -109,7 +111,8 @@ const {
 ].reduce(
   (functions, tagName) =>
     ({ ...functions,
-      [tagName]: (x, ...nodes) => create(tagName, x, ...nodes) }),
+      [tagName]: (nodeOrProperties, ...nodes) =>
+        create(tagName, nodeOrProperties, ...nodes) }),
   {
     doctype: (qualifiedName, publicId = '', systemId = '') =>
       document.implementation.createDocumentType(
