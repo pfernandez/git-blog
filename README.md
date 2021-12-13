@@ -89,7 +89,7 @@ _jLisp_ is about writng JavaScript in a Lisp syntax while still being able to le
 Given a function `add(x, y)`,
 
 ```js
-import { evaluate } from '/jlisp.js'
+import { evaluate } from '/.jlisp.js'
 
 evaluate(
   [console.log,
