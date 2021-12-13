@@ -1,5 +1,3 @@
-/** @module expressive/utils */
-
 export const log = (...x) => (console.log(...x), x.slice(-1)[0])
 
 export const nil = []
