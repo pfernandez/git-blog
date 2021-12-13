@@ -3,8 +3,8 @@
 A new project that (so far anyway), is split into two totally separate, yet
 complimentary parts:
 
-* A toolkit for creating web interfaces. How about _elements.js_?.
-* A Lisp interpreter for JavaScript. Let's call it _jLisp_.
+* A toolkit for creating web interfaces. Let's call it _elements.js_.
+* A Lisp interpreter for JavaScript. How about _jLisp_?
 
 I may break these into separate libraries at some point, but for now they live together for convenience.
 
@@ -19,7 +19,7 @@ To discover the most _expressive_ way to code for the web.
 >  1. Effectively conveying thought or feeling.
 >  2. Conveying (a specified quality or idea).
 
-Programming is a process of making ideas a reality, and uncovering new ideas along the way. This project itself is the expression of such a process. In fact, all symbolic logic, whether in a math textbook or a computer program, are composed of expressions.
+Programming is a process of making ideas a reality, and uncovering new ideas along the way. This project itself is the expression of such a process. In fact, all symbolic logic, whether in a math textbook or a computer program, is composed of expressions.
 
 The qualites I'm looking for here, then, are features that allow and encourage writing code that is
 
