@@ -82,13 +82,15 @@ body(counter())
 
 ```
 
-## jLisp
+## jlisp
 
 _jLisp_ is about writng JavaScript in a Lisp syntax while still being able to levarage all of the libraries we know and love, _still writing plain JS_. This is made possible with the `evaluate` function, which recursively evaluates an expression.
 
 Given a function `add(x, y)`,
 
 ```js
+import { evaluate } from '/jlisp.js'
+
 evaluate(
   [console.log,
     1,
