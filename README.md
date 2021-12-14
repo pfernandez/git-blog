@@ -30,7 +30,7 @@ The qualites I'm looking for here, then, are features that allow and encourage w
 
 ## elements.js
 
-The idea is to compose the UI with special functions that emit HTML, creating a structure that mirrors the real DOM. Running the code below will render a web page.
+The idea is to compose the UI with _function elements_ that emit HTML, creating a structure that mirrors the real DOM. Running the code below will render a web page.
 
 ### Hello World
 ```js
@@ -50,7 +50,7 @@ html(
       h1('Hello World'))))
 ```
 
-If a **function element** is called while it already exists on the page, it will be rerendered.
+If a function element is called while it already exists on the page, it will be rerendered.
 
 ### A Simple Counter
 ```js
