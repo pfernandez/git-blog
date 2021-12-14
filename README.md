@@ -88,7 +88,7 @@ _jLisp_ is about writng JavaScript in a Lisp syntax while still being able to le
 
 Given a function `add(x, y)`,
 
-```js
+```lisp
 import { evaluate } from '/.jLisp.js'
 
 evaluate(
