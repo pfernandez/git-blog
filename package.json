@@ -45,6 +45,7 @@
         "ImportDeclaration": "first",
         "VariableDeclarator": { "var": 2, "let": 2, "const": 3 }
       }],
+      "key-spacing": [ "warn", { "mode": "minimum" } ],
       "linebreak-style": ["error", "unix"],
       "no-extra-parens": "warn",
       "no-multiple-empty-lines": ["warn", { "max": 2, "maxEOF": 1 }],

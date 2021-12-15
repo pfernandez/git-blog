@@ -59,7 +59,7 @@ const replaceElements = (selector, properties, children) =>
  *
  * @returns HTMLElement
  */
-const create = (tagName, nodeOrProperties, ...childNodes) => {
+export const create = (tagName, nodeOrProperties, ...childNodes) => {
   const [properties, ...children] = disambiguate(nodeOrProperties, childNodes),
         selector = getSelector(tagName, properties),
         lastProperties = store.get(selector)
@@ -79,7 +79,7 @@ const create = (tagName, nodeOrProperties, ...childNodes) => {
     ...children)}
 
 export const {
-  doctype, fragment,
+  doctype, fragment, imgmap,
   a, abbr, address, area, article, aside, audio, b, base,
   bdi, bdo, blockquote, body, br, button, canvas, caption,
   cite, code, col, colgroup, data, datalist, dd, del, details,
