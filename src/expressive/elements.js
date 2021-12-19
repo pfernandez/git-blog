@@ -1,50 +1,62 @@
-const { isArray } = Array,
-      { keys, entries } = Object
+import {
+  each,
+  entries,
+  eq,
+  filter,
+  instance,
+  join,
+  keys,
+  object as obj,
+  reduce,
+  slice,
+  type
+} from '../expressive.js'
 
 const store = new Map()
 
-const isObject = x => typeof x === 'object' && !isArray(x) && x !== null
-
 const changed = (x, y) =>
-  typeof x !== typeof y
-    || (typeof x === 'object' && x !== null
-      ? keys({ ...x, ...y }).some(k => changed(x[k], y[k]))
+  !type(x, type(y))
+    || (type(x, 'object') && !eq(x, null)
+      ? some(keys({ ...x, ...y }), k => changed(x[k], y[k]))
       // Function references always change, so ignore them. In
       // `assignProperties` we point to the last stored function instead.
-      : typeof x !== 'function'
-        && x !== y)
+      : !type(x, 'function') && !eq(x, y))
 
 const disambiguate = (x, childNodes) =>
-  ((x instanceof Element || !isObject(x))
+  ((instance(x, Element) || !obj(x))
     && (childNodes = [x, ...childNodes], x = {}),
-  childNodes.reduce((a, node) =>
-    node instanceof Element
-      ? [...a, node]
-      : [{ ...a[0], innerText: node }, ...a.slice(1)],
-  [x]))
+  reduce(childNodes,
+    (a, node) =>
+      instance(node, Element)
+        ? [...a, node]
+        : [{ ...a[0], innerText: node }, ...slice(a, 1)],
+    [x]))
 
 const getSelector = (tagName, { id, className }) =>
   tagName
-    + (id ? `#${id}`
-      : className ? `.${className.split(' ').filter(s => s).join('.')}`
+    + (id
+      ? `#${id}`
+      : className
+        ? `.${join(filter(split(className), s => s), '.')}` // TODO: Regex
         : '')
 
 const assignProperties = (element, selector, properties) =>
-  entries(properties).reduce((el, [k, v]) =>
-    (el[k] = typeof v === 'function' ? () => store.get(selector)[k]() : v,
-    isObject(v) && assignProperties(el[k], selector, v),
-    el),
-  element)
+  reduce(entries(properties),
+    (el, [k, v]) =>
+      (el[k] = type(v, 'function') ? () => store.get(selector)[k]() : v,
+      obj(v) && assignProperties(el[k], selector, v),
+      el),
+    element)
 
-const appendChildren = (element, children) =>
-  (element.append(...children), element)
+const append = (element, children) => (element.append(...children), element)
 
 const appendSubtree = (element, selector, properties, ...children) =>
-  appendChildren(assignProperties(element, selector, properties), children)
+  append(assignProperties(element, selector, properties), children)
 
 const replaceElements = (selector, properties, children) =>
-  document.querySelectorAll(selector).forEach(el => el.replaceWith(
-    appendSubtree(el.cloneNode(), selector, properties, ...children)))
+  each(document.querySelectorAll(selector),
+    el => el.replaceWith(
+      appendSubtree(el.cloneNode(), selector, properties, ...children)))
 
 /**
  * Generates an HTMLElement with children and inserts it into the DOM.
@@ -64,11 +76,11 @@ export const create = (tagName, nodeOrProperties, ...childNodes) => {
         selector = getSelector(tagName, properties),
         lastProperties = store.get(selector)
 
+  store.set(selector, properties)
+
   lastProperties
     && changed(properties, lastProperties)
     && replaceElements(selector, properties, children)
-
-  store.set(selector, properties)
 
   return appendSubtree(
     ['html', 'head', 'body'].includes(tagName)
@@ -118,5 +130,5 @@ export const {
         qualifiedName, publicId, systemId),
 
     fragment: (...childNodes) =>
-      appendChildren(document.createDocumentFragment(), childNodes),
+      append(document.createDocumentFragment(), childNodes),
   })

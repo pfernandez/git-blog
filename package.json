@@ -37,6 +37,7 @@
     "rules": {
       "array-bracket-newline": ["warn", "consistent"],
       "arrow-parens": ["warn", "as-needed"],
+      "arrow-spacing": "warn",
       "comma-spacing": ["warn", { "before": false, "after": true }],
       "comma-style": ["warn", "last"],
       "computed-property-spacing": ["warn", "never"],
@@ -54,7 +55,7 @@
         "exceptions": { "Property": false }
       }],
       "no-trailing-spaces": "warn",
-      "no-undef": "off",
+      "no-undef": "warn",
       "no-unused-vars": ["warn", {
         "args": "all",
         "argsIgnorePattern": "^_"

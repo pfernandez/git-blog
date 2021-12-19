@@ -14,22 +14,24 @@ export const eq = (x, y) => x === y
 
 export const bool = value => !!value
 
-export const type = value => typeof value
+export const type = (value, type) => type ? typeof value === type : typeof value
 
-export const isType = (value, type) => typeof value === type
+export const instance = (value, type) => value instanceof type
 
-export const exists = value => !isType(value, 'undefined')
+export const exists = value => !type(value, 'undefined')
 
-export const isFunction = value => isType(value, 'function')
+export const isFunction = value => type(value, 'function')
 
 export const { isArray } = Array
 
-export const isObject = value =>
-  isType(value, 'object') && !isArray(value) && value !== null
+export const object = value =>
+  value
+    ? type(value, 'object') && !isArray(value) && value !== null
+    : {}
 
 export const isEmpty = value =>
   isArray(value)
-    ? !length(value) : isObject(value)
+    ? !length(value) : object(value)
       ? !length(keys(value)) : bool(value)
 
 export const { keys, entries } = Object
@@ -45,6 +47,12 @@ export const omap = (object, fn) =>
     entries(object),
     (_, [k, v]) => fn(k, v),
     {})
+
+export const split = (array, separator, limit) => array.split(separator, limit)
+
+export const filter = (array, predicate) => array.filter(predicate)
+
+export const join = (array, separator) => array.join(separator)
 
 export const push = (value, array) => array.push(value)
 
