@@ -32,3 +32,20 @@ evaluate(
     [sum,
       1,
       [sum, 1, 1]]])
+
+evaluate(
+  [html,
+    [doctype, 'html'],
+    [head,
+      [title, 'Expressive'],
+      [link, { rel: 'icon', href: 'img/favicon.ico' }]],
+    [body,
+      { style:
+        { background: '#222',
+          color: '#eee',
+          textAlign: 'center' } },
+      [main,
+        [h1, 'Recursive counter'],
+        [counter]]]])
+
+evaluate([counter, 42])
