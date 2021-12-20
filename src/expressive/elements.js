@@ -5,6 +5,8 @@ const store = new Map()
 
 const isObject = x => typeof x === 'object' && !isArray(x) && x !== null
 
+const omit = (object, key) => (({ [key]: _, ...o }) => o)(object)
+
 const changed = (x, y) =>
   typeof x !== typeof y
     || (typeof x === 'object' && x !== null
@@ -14,11 +16,11 @@ const changed = (x, y) =>
       : typeof x !== 'function'
         && x !== y)
 
-const disambiguate = (x, childNodes) =>
+const prepare = (x, childNodes) =>
   ((x instanceof Element || !isObject(x))
     && (childNodes = [x, ...childNodes], x = {}),
   childNodes.reduce((a, node) =>
-    node instanceof Element
+    isObject(node) && node.tagName
       ? [...a, node]
       : [{ ...a[0], innerText: node }, ...a.slice(1)],
   [x]))
@@ -42,7 +44,15 @@ const appendChildren = (element, children) =>
 const appendSubtree = (element, selector, properties, ...children) =>
   appendChildren(assignProperties(element, selector, properties), children)
 
-const replaceElements = (selector, properties, children) =>
+// TODO: Three approaches are possible:
+//
+// 1. Replace only elements whose properties have changed (current approach).
+// 2. Replace individual properties intead of replacing entire elements.
+// 3. Replace the called element with its entire subtree, regardless of changes.
+//
+// Each may be more efficient depending on the number of comparisions to be
+// made. Test them all and determine when to use one others.
+const update = (selector, properties, children) =>
   document.querySelectorAll(selector).forEach(el => el.replaceWith(
     appendSubtree(el.cloneNode(), selector, properties, ...children)))
 
@@ -59,24 +69,24 @@ const replaceElements = (selector, properties, children) =>
  *
  * @returns HTMLElement
  */
-export const create = (tagName, nodeOrProperties, ...childNodes) => {
-  const [properties, ...children] = disambiguate(nodeOrProperties, childNodes),
+export const create = (tagName, x, ...childNodes) => {
+  const [properties, ...children] = prepare(x, childNodes),
         selector = getSelector(tagName, properties),
-        lastProperties = store.get(selector)
-
-  lastProperties
-    && changed(properties, lastProperties)
-    && replaceElements(selector, properties, children)
-
+        lastProperties = store.get(selector),
+        shouldUpdate = lastProperties && changed(properties, lastProperties)
   store.set(selector, properties)
 
-  return appendSubtree(
-    ['html', 'head', 'body'].includes(tagName)
-      ? 'html' === tagName ? document.documentElement : document[tagName]
-      : document.createElement(tagName),
-    selector,
-    properties,
-    ...children)}
+  return lastProperties
+    ? shouldUpdate
+      ? update(selector, omit(properties, 'tagName'), children)
+      : { ...properties, tagName }
+    : appendSubtree(
+      ['html', 'head', 'body'].includes(tagName)
+        ? 'html' === tagName ? document.documentElement : document[tagName]
+        : document.createElement(tagName),
+      selector,
+      properties,
+      ...children)}
 
 export const {
   doctype, fragment, imgmap,
@@ -110,8 +120,8 @@ export const {
 ].reduce(
   (functions, tagName) =>
     ({ ...functions,
-      [tagName]: (nodeOrProperties, ...nodes) =>
-        create(tagName, nodeOrProperties, ...nodes) }),
+       [tagName]: (nodeOrProperties, ...nodes) =>
+         create(tagName, nodeOrProperties, ...nodes) }),
   {
     doctype: (qualifiedName, publicId = '', systemId = '') =>
       document.implementation.createDocumentType(

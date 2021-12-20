@@ -6,6 +6,8 @@ export const slice = (array, start, end) => array.slice(start, end)
 
 export const last = array => first(slice(array, -1))
 
+export const omit = (object, key) => (({ [key]: _, ...o }) => o)(object)
+
 export const log = (...values) => (console.log(...values), last(values))
 
 export const length = array => array.length
@@ -16,6 +18,8 @@ export const bool = value => !!value
 
 export const type = (value, type) => type ? typeof value === type : typeof value
 
+export const identity = value => value
+
 export const instance = (value, type) => value instanceof type
 
 export const exists = value => !type(value, 'undefined')
@@ -24,14 +28,12 @@ export const isFunction = value => type(value, 'function')
 
 export const { isArray } = Array
 
-export const object = value =>
-  value
-    ? type(value, 'object') && !isArray(value) && value !== null
-    : {}
+export const isObject = value =>
+  type(value, 'object') && !isArray(value) && value !== null
 
 export const isEmpty = value =>
   isArray(value)
-    ? !length(value) : object(value)
+    ? !length(value) : isObject(value)
       ? !length(keys(value)) : bool(value)
 
 export const { keys, entries } = Object
@@ -43,10 +45,16 @@ export const reduce = (array, fn, value) => array.reduce(fn, value)
 export const map = (array, fn) => array.map(fn)
 
 export const omap = (object, fn) =>
-  reduce(
-    entries(object),
-    (_, [k, v]) => fn(k, v),
-    {})
+  reduce(entries(object), (_, [k, v]) => fn(k, v), {})
+
+export const deepMap = (value, fn) =>
+  isArray(value)
+    ? map(value, v => deepMap(v, fn))
+    : type(value, 'object') && value !== null
+      ? reduce(entries(value),
+        (o, [k, v]) => ({ ...o, [k]: deepMap(v, fn) }),
+        {})
+      : fn(value)
 
 export const split = (array, separator, limit) => array.split(separator, limit)
 
@@ -66,9 +74,11 @@ export const reverse = array => [...array].reverse()
 
 export const sum = (...values) => values.reduce((x, y) => x + y)
 
+export const walk = (root, f) => each(f(root), node => walk(node, f))
+
 export const globalize = object =>
-  each(
-    entries(object),
+  each(entries(object),
+    /* global global, window */
     ([k, v]) => window ? window[k] = v : global[k] = v)
 
 /**
