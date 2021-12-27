@@ -6,65 +6,74 @@ export const slice = (array, start, end) => array.slice(start, end)
 
 export const last = array => first(slice(array, -1))
 
-export const omit = (object, key) => (({ [key]: _, ...o }) => o)(object)
-
 export const log = (...values) => (console.log(...values), last(values))
 
 export const length = array => array.length
 
-export const eq = (x, y) => x === y
-
 export const bool = value => !!value
 
-export const type = (value, type) => type ? typeof value === type : typeof value
+export const eq = (x, y) => x === y
+
+export const and = (x, y) => x && y
+
+export const or = (x, y) => x || y
+
+export const not = value => !value
+
+export const ifElse = (value, then, otherwise) => value ? then : otherwise
 
 export const identity = value => value
 
-export const instance = (value, type) => value instanceof type
+export const exists = value => not(type(value, 'undefined'))
 
-export const exists = value => !type(value, 'undefined')
+export const type = (value, type) =>
+  type ? eq(typeof value, type) : typeof value
+
+export const isInstance = (value, type) => value instanceof type
 
 export const isFunction = value => type(value, 'function')
 
 export const { isArray } = Array
 
 export const isObject = value =>
-  type(value, 'object') && !isArray(value) && value !== null
+  and(type(value, 'object'), not(eq(value, null)))
 
 export const isEmpty = value =>
-  isArray(value)
-    ? !length(value) : isObject(value)
-      ? !length(keys(value)) : bool(value)
+  isObject(value)
+    ? !length(isArray(value) ? value : keys(value))
+    : bool(value)
 
 export const { keys, entries } = Object
 
 export const some = (array, fn) => array.some(fn)
+
+export const every = (...values) => values.every(v => v)
+
+export const find = (array, fn) => array.find(fn)
+
+export const omit = (object, key) => (({ [key]: _, ...o }) => o)(object)
+
+export const each = (array, fn) => array.forEach(fn)
 
 export const reduce = (array, fn, value) => array.reduce(fn, value)
 
 export const map = (array, fn) => array.map(fn)
 
 export const omap = (object, fn) =>
-  reduce(entries(object), (_, [k, v]) => fn(k, v), {})
+  reduce(entries(object), (o, [k, v]) => ({ ...o, [k]: fn(v) }), {})
 
 export const deepMap = (value, fn) =>
-  isArray(value)
-    ? map(value, v => deepMap(v, fn))
-    : type(value, 'object') && value !== null
-      ? reduce(entries(value),
-        (o, [k, v]) => ({ ...o, [k]: deepMap(v, fn) }),
-        {})
+  isArray(value) ? map(value, v => deepMap(v, fn))
+    : isObject(value) ? omap(value, v => deepMap(v, fn))
       : fn(value)
 
 export const split = (array, separator, limit) => array.split(separator, limit)
 
-export const filter = (array, predicate) => array.filter(predicate)
+export const filter = (array, fn) => array.filter(fn)
 
 export const join = (array, separator) => array.join(separator)
 
-export const push = (value, array) => array.push(value)
-
-export const each = (array, fn) => array.forEach(fn)
+export const append = (value, array) => [...array].push(value)
 
 export const apply = (fn, array) => fn.apply(null, array)
 

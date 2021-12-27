@@ -5,44 +5,62 @@ const store = new Map()
 
 const isObject = x => typeof x === 'object' && !isArray(x) && x !== null
 
-const omit = (object, key) => (({ [key]: _, ...o }) => o)(object)
-
-const changed = (x, y) =>
-  typeof x !== typeof y
-    || (typeof x === 'object' && x !== null
-      ? keys({ ...x, ...y }).some(k => changed(x[k], y[k]))
-      // Function references always change, so ignore them. In
-      // `assignProperties` we point to the last stored function instead.
-      : typeof x !== 'function'
-        && x !== y)
-
-const prepare = (x, childNodes) =>
-  ((x instanceof Element || !isObject(x))
-    && (childNodes = [x, ...childNodes], x = {}),
-  childNodes.reduce((a, node) =>
-    isObject(node) && node.tagName
-      ? [...a, node]
-      : [{ ...a[0], innerText: node }, ...a.slice(1)],
-  [x]))
-
-const getSelector = (tagName, { id, className }) =>
-  tagName
-    + (id ? `#${id}`
-      : className ? `.${className.split(' ').filter(s => s).join('.')}`
-        : '')
+const element = tagName =>
+  ['html', 'head', 'body'].includes(tagName)
+    ? 'html' === tagName ? document.documentElement : document[tagName]
+    : document.createElement(tagName)
 
 const assignProperties = (element, selector, properties) =>
   entries(properties).reduce((el, [k, v]) =>
-    (el[k] = typeof v === 'function' ? () => store.get(selector)[k]() : v,
-    isObject(v) && assignProperties(el[k], selector, v),
+    (el[k] = typeof v === 'function'
+      ? () => store.get(selector)[k]()
+      : v,
+    isObject(v)
+      && assignProperties(el[k], selector, v),
     el),
   element)
 
-const appendChildren = (element, children) =>
-  (element.append(...children), element)
+const appendChildren = (element, childNodes) =>
+  (element.append(...childNodes), element)
 
-const appendSubtree = (element, selector, properties, ...children) =>
-  appendChildren(assignProperties(element, selector, properties), children)
+const appendSubtree = (element, selector, properties, children) =>
+  appendChildren(
+    assignProperties(element, selector, properties),
+    children)
+
+const selector = (tagName, { id, className }) =>
+  tagName
+  + (id ? `#${id}`
+    : className ? `.${className.split(' ').filter(s => s).join('.')}`
+      : '')
+
+const augment = (properties, childNodes) =>
+  childNodes.reduce((o, node) =>
+    ({ ...o,
+       currentChildren:
+      [...o.currentChildren,
+        isObject(node)
+          ? selector(node.tagName.toLowerCase(), node)
+          : node] }),
+  { ...properties, currentChildren: [] })
+
+const disambiguate = (x, nodes) =>
+  ((!isObject(x) || x instanceof Element)
+    && (nodes = [x, ...nodes], x = {}),
+  [x, nodes])
+
+const prepare = (tagName, properties, childNodes) =>
+  ({ childNodes,
+     properties: augment(properties, childNodes),
+     selector: selector(tagName, properties),
+     tagName })
+
+const changed = (x, y) =>
+  typeof x !== typeof y
+  || (typeof x === 'object' && x !== null
+    ? keys({ ...x, ...y }).some(k => changed(x[k], y[k]))
+    : typeof x !== 'function'
+      && x !== y)
 
 // TODO: Three approaches are possible:
 //
@@ -54,7 +72,7 @@ const appendSubtree = (element, selector, properties, ...children) =>
 // made. Test them all and determine when to use one others.
 const update = (selector, properties, children) =>
   document.querySelectorAll(selector).forEach(el => el.replaceWith(
-    appendSubtree(el.cloneNode(), selector, properties, ...children)))
+    appendSubtree(el.cloneNode(), selector, properties, children)))
 
 /**
  * Generates an HTMLElement with children and inserts it into the DOM.
@@ -69,64 +87,53 @@ const update = (selector, properties, children) =>
  *
  * @returns HTMLElement
  */
-export const create = (tagName, x, ...childNodes) => {
-  const [properties, ...children] = prepare(x, childNodes),
-        selector = getSelector(tagName, properties),
-        lastProperties = store.get(selector),
-        shouldUpdate = lastProperties && changed(properties, lastProperties)
-  store.set(selector, properties)
+export const create =
+  ({ childNodes, properties, selector, tagName },
+    lastProperties = store.get(selector)) =>
+    (store.set(selector, properties),
+    lastProperties
+      && changed(properties, lastProperties)
+      && update(selector, properties, childNodes),
+    appendSubtree(element(tagName), selector, properties, childNodes))
 
-  return lastProperties
-    ? shouldUpdate
-      ? update(selector, omit(properties, 'tagName'), children)
-      : { ...properties, tagName }
-    : appendSubtree(
-      ['html', 'head', 'body'].includes(tagName)
-        ? 'html' === tagName ? document.documentElement : document[tagName]
-        : document.createElement(tagName),
-      selector,
-      properties,
-      ...children)}
+const tagNames =
+  [ 'a', 'abbr', 'address', 'area', 'article', 'aside', 'audio', 'b', 'base',
+    'bdi', 'bdo', 'blockquote', 'body', 'br', 'button', 'canvas', 'caption',
+    'cite', 'code', 'col', 'colgroup', 'data', 'datalist', 'dd', 'del', 'details',
+    'dfn', 'dialog', 'div', 'dl', 'dt', 'em', 'embed', 'fieldset', 'figcaption',
+    'figure', 'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'head',
+    'header', 'hgroup', 'hr', 'html', 'i', 'iframe', 'img', 'input', 'ins', 'kbd',
+    'label', 'legend', 'li', 'link', 'main', 'map', 'mark', 'menu', 'meta',
+    'meter', 'nav', 'noscript', 'object', 'ol', 'optgroup', 'option', 'output',
+    'p', 'param', 'picture', 'pre', 'progress', 'q', 'rp', 'rt', 'ruby', 's',
+    'samp', 'script', 'section', 'select', 'slot', 'small', 'source', 'span',
+    'strong', 'style', 'sub', 'summary', 'sup', 'table', 'tbody', 'td',
+    'template', 'textarea', 'tfoot', 'th', 'thead', 'time', 'title', 'tr',
+    'track', 'u', 'ul', 'var', 'video', 'wbr' ]
 
-export const {
-  doctype, fragment, imgmap,
-  a, abbr, address, area, article, aside, audio, b, base,
-  bdi, bdo, blockquote, body, br, button, canvas, caption,
-  cite, code, col, colgroup, data, datalist, dd, del, details,
-  dfn, dialog, div, dl, dt, em, embed, fieldset, figcaption,
-  figure, footer, form, h1, h2, h3, h4, h5, h6, head,
-  header, hgroup, hr, html, i, iframe, img, input, ins, kbd,
-  label, legend, li, link, main, map, mark, menu, meta,
-  meter, nav, noscript, object, ol, optgroup, option, output,
-  p, param, picture, pre, progress, q, rp, rt, ruby, s,
-  samp, script, section, select, slot, small, source, span,
-  strong, style, sub, summary, sup, table, tbody, td,
-  template, textarea, tfoot, th, thead, time, title, tr,
-  track, u, ul, video, wbr
-} = [
-  'a', 'abbr', 'address', 'area', 'article', 'aside', 'audio', 'b', 'base',
-  'bdi', 'bdo', 'blockquote', 'body', 'br', 'button', 'canvas', 'caption',
-  'cite', 'code', 'col', 'colgroup', 'data', 'datalist', 'dd', 'del', 'details',
-  'dfn', 'dialog', 'div', 'dl', 'dt', 'em', 'embed', 'fieldset', 'figcaption',
-  'figure', 'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'head',
-  'header', 'hgroup', 'hr', 'html', 'i', 'iframe', 'img', 'input', 'ins', 'kbd',
-  'label', 'legend', 'li', 'link', 'main', 'map', 'mark', 'menu', 'meta',
-  'meter', 'nav', 'noscript', 'object', 'ol', 'optgroup', 'option', 'output',
-  'p', 'param', 'picture', 'pre', 'progress', 'q', 'rp', 'rt', 'ruby', 's',
-  'samp', 'script', 'section', 'select', 'slot', 'small', 'source', 'span',
-  'strong', 'style', 'sub', 'summary', 'sup', 'table', 'tbody', 'td',
-  'template', 'textarea', 'tfoot', 'th', 'thead', 'time', 'title', 'tr',
-  'track', 'u', 'ul', 'var', 'video', 'wbr'
-].reduce(
+const elements = tagNames.reduce(
   (functions, tagName) =>
     ({ ...functions,
        [tagName]: (nodeOrProperties, ...nodes) =>
-         create(tagName, nodeOrProperties, ...nodes) }),
-  {
-    doctype: (qualifiedName, publicId = '', systemId = '') =>
-      document.implementation.createDocumentType(
-        qualifiedName, publicId, systemId),
-
+         create(prepare(tagName, ...disambiguate(nodeOrProperties, nodes))) }),
+  { doctype: (qualifiedName, publicId = '', systemId = '') =>
+    document.implementation
+      .createDocumentType(qualifiedName, publicId, systemId),
     fragment: (...childNodes) =>
-      appendChildren(document.createDocumentFragment(), childNodes),
-  })
+      appendChildren(document.createDocumentFragment(), ...childNodes) })
+
+export const
+      { doctype, fragment, imgmap,
+        a, abbr, address, area, article, aside, audio, b, base,
+        bdi, bdo, blockquote, body, br, button, canvas, caption,
+        cite, code, col, colgroup, data, datalist, dd, del, details,
+        dfn, dialog, div, dl, dt, em, embed, fieldset, figcaption,
+        figure, footer, form, h1, h2, h3, h4, h5, h6, head,
+        header, hgroup, hr, html, i, iframe, img, input, ins, kbd,
+        label, legend, li, link, main, map, mark, menu, meta,
+        meter, nav, noscript, object, ol, optgroup, option, output,
+        p, param, picture, pre, progress, q, rp, rt, ruby, s,
+        samp, script, section, select, slot, small, source, span,
+        strong, style, sub, summary, sup, table, tbody, td,
+        template, textarea, tfoot, th, thead, time, title, tr,
+        track, u, ul, video, wbr } = elements

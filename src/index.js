@@ -7,7 +7,7 @@ import './expressive/global.js'
    But instead of mutating state to reload a component, we can call the
    component directly with new arguments, even using recursion if desired. */
 
-const counter = count =>
+window.counter = count =>
   div(
     pre(
       { style:
@@ -27,9 +27,9 @@ const counter = count =>
        link({ rel: 'icon', href: 'img/favicon.ico' })),
      body(
        { style:
-         { background: '#222',
-           color: '#eee',
-           textAlign: 'center' } },
+            { background: '#222',
+              color: '#eee',
+              textAlign: 'center' } },
        main(
          h1('Recursive counter'),
          counter(0))))
@@ -38,7 +38,7 @@ const counter = count =>
 
    The `evaluate` function lets us go all the way. First we'll store the app in
    a variable (although it would typically be exported from a dedicated file).
-   */
+*/
 
 const app =
   [html,
@@ -61,12 +61,7 @@ const app =
 
 const app2 = deepMap(app, node => node === 0 ? 42 : node)
 
-/* In Lisp, this type of "metaprogramming" is called a "macro", although
-   typically it's done by escaping and unescaping the code as if it were a
-   string. Here, we simply use plain JavaScript as a "metalanguage" to
-   accomplish the same thing in a more structured way.
-
-   Let's run it. */
+/* Let's run it. */
 
 evaluate(app2)
 
