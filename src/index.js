@@ -1,13 +1,13 @@
 import './expressive/global.js'
 
 /* The Expressive library comes with functions called "live elements" that will
-   immediately render the DOM when called. A "component" can be composed from
+   immediately render the DOM when called. A component can be composed from
    these functions, which React users will find familar.
 
    But instead of mutating state to reload a component, we can call the
    component directly with new arguments, even using recursion if desired. */
 
-window.counter = count =>
+const counter = count =>
   div(
     pre(
       { style:
@@ -18,23 +18,23 @@ window.counter = count =>
       { onclick: () => counter(count + 1) },
       'Increment'))
 
-/* The full single-page app might look like this...
+/* The full single-page app might look like this... */
 
-   html(
-     doctype('html'),
-     head(
-       title('Expressive'),
-       link({ rel: 'icon', href: 'img/favicon.ico' })),
-     body(
-       { style:
-            { background: '#222',
-              color: '#eee',
-              textAlign: 'center' } },
-       main(
-         h1('Recursive counter'),
-         counter(0))))
+html(
+  doctype('html'),
+  head(
+    title('Expressive'),
+    link({ rel: 'icon', href: 'img/favicon.ico' })),
+  body(
+    { style:
+      { background: '#222',
+        color: '#eee',
+        textAlign: 'center' } },
+    main(
+      h1('Recursive counter'),
+      counter(0))))
 
-   ...which almost looks like Lisp, doesn't it?
+/* ...which almost looks like Lisp, doesn't it?
 
    The `evaluate` function lets us go all the way. First we'll store the app in
    a variable (although it would typically be exported from a dedicated file).
