@@ -17,11 +17,11 @@ const tagNames = [
 const { isArray } = Array,
       { keys, entries } = Object
 
-const store = new Map()
+window.store = new Map()
 
 const isObject = x => typeof x === 'object' && !isArray(x) && x !== null
 
-const assignProperties = (element, selector, properties) =>
+const assignProperties = (baseElement, selector, properties) =>
   entries(properties).reduce((el, [k, v]) =>
     (el[k] = typeof v === 'function'
       ? () => store.get(selector)[k]()
@@ -29,14 +29,14 @@ const assignProperties = (element, selector, properties) =>
     isObject(v)
       && assignProperties(el[k], selector, v),
     el),
-  element)
+  baseElement)
 
-const replaceChildren = (element, childNodes) =>
-  (element.replaceChildren(...childNodes), element)
+const replaceChildren = (baseElement, childNodes) =>
+  (baseElement.replaceChildren(...childNodes), baseElement)
 
-const appendSubtree = (element, selector, properties, children) =>
+const replaceSubtree = (baseElement, selector, properties, children) =>
   replaceChildren(
-    assignProperties(element, selector, properties),
+    assignProperties(baseElement, selector, properties),
     children)
 
 const selector = (tagName, { id, className }) =>
@@ -55,16 +55,15 @@ const augment = (properties, childNodes) =>
           : node] }),
   { ...properties, currentChildren: [] })
 
-const disambiguate = (x, nodes) =>
-  ((!isObject(x) || x instanceof Element)
-    && (nodes = [x, ...nodes], x = {}),
-  [x, nodes])
-
-const prepare = (tagName, properties, childNodes) =>
-  ({ childNodes,
-     properties: augment(properties, childNodes),
-     selector: selector(tagName, properties),
-     tagName })
+const prepare = (tagName, x, childNodes) =>
+  ({ tagName,
+     ...!isObject(x) || x instanceof Element
+       ? { childNodes: [x, ...childNodes],
+           properties: augment({}, [x, ...childNodes]),
+           selector: selector(tagName, {}) }
+       : { childNodes,
+           properties: augment(x, childNodes),
+           selector: selector(tagName, x) } })
 
 const changed = (x, y) =>
   typeof x !== typeof y
@@ -80,12 +79,12 @@ const changed = (x, y) =>
 // 3. Replace the called element with its entire subtree, regardless of changes.
 //
 // Each may be more efficient depending on the number of comparisions to be
-// made. Test them all and determine when to use one others.
+// made. Test them all and determine when to use one over the others.
 const update = (selector, properties, children) =>
   document.querySelectorAll(selector).forEach(el => el.replaceWith(
-    appendSubtree(el.cloneNode(), selector, properties, children)))
+    replaceSubtree(el.cloneNode(), selector, properties, children)))
 
-const element = tagName =>
+const baseElement = tagName =>
   ['html', 'head', 'body'].includes(tagName)
     ? 'html' === tagName ? document.documentElement : document[tagName]
     : document.createElement(tagName)
@@ -96,9 +95,9 @@ const liveElement =
     (store.set(selector, properties),
     lastProperties
       && changed(properties, lastProperties)
-      && log(`Updating ${tagName}:`, properties)
       && update(selector, properties, childNodes),
-    appendSubtree(element(tagName), selector, properties, childNodes))
+    replaceSubtree(
+      baseElement(tagName), selector, properties, childNodes))
 
 /**
  * Generates an HTMLElement with children and inserts it into the DOM.
@@ -113,8 +112,21 @@ const liveElement =
  *
  * @returns HTMLElement
  */
-export const create = (tagName, nodeOrProperties, ...nodes) =>
-  liveElement(prepare(tagName, ...disambiguate(nodeOrProperties, nodes)))
+export const element = (tagName, nodeOrProperties, ...nodes) =>
+  liveElement(prepare(tagName, nodeOrProperties, nodes))
+
+export const el = element
+
+const defaultElements = tagNames.reduce(
+  (functions, tagName) =>
+    ({ ...functions,
+       [tagName]: (nodeOrProperties, ...nodes) =>
+         element(tagName, nodeOrProperties, ...nodes) }),
+  { doctype: (qualifiedName, publicId = '', systemId = '') =>
+    document.implementation
+      .createDocumentType(qualifiedName, publicId, systemId),
+    fragment: (...childNodes) =>
+      replaceChildren(document.createDocumentFragment(), ...childNodes) })
 
 export const {
   doctype, fragment, imgmap,
@@ -131,13 +143,4 @@ export const {
   strong, style, sub, summary, sup, table, tbody, td,
   template, textarea, tfoot, th, thead, time, title, tr,
   track, u, ul, video, wbr
-} = tagNames.reduce(
-  (functions, tagName) =>
-    ({ ...functions,
-       [tagName]: (nodeOrProperties, ...nodes) =>
-         create(tagName, nodeOrProperties, ...nodes) }),
-  { doctype: (qualifiedName, publicId = '', systemId = '') =>
-    document.implementation
-      .createDocumentType(qualifiedName, publicId, systemId),
-    fragment: (...childNodes) =>
-      replaceChildren(document.createDocumentFragment(), ...childNodes) })
+} = defaultElements

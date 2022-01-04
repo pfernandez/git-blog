@@ -7,9 +7,9 @@ const main = 'index.js',
 
 express()
   .use(express.static(path))
-  .get('/favicon.ico', (_, res) => res.status(204).end())
   .get('/data', (_, res) => res.send({ count: 1 }))
   .get('/', (_, res) => res.send(`
+    <link rel="icon" href="data:x-icon">
     <script src="//localhost:35729/livereload.js"></script>
     <script type="module" src="${main}"></script>
   `))
