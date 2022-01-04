@@ -73,7 +73,7 @@ There's no reason we shouldn't use the CSS modules approach here, and we can cer
 ```js
 import { bodyStyles } from './style.js'
 
-body( style: bodyStyles , main(h1('Hello World'))
+body({ style: bodyStyles }, main(h1('Hello World'))
 ```
 
 (We might want unique strings appended to CSS class names, but a basic function should take care of it. Maybe call it `uniquify`?)
