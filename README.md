@@ -293,7 +293,7 @@ The list of functions is, of course, evolving, but at the time of this writing t
 
 Some might feel that a syntax composed of nothing but functions is beautiful in its simplicity, even if it is a bit more verbose. But perhaps more importantly...
 
-### Deferred Evaluation
+### Deferred Evaluation, Metaprogramming, and Lisp Macros
 
 Consider the **Data as Code** section above. If you want to include (say) a conditional expression, we'd normally write it like so:
 
