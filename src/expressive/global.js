@@ -1,4 +1,4 @@
 import * as elements from './elements.js'
-import * as expressive from '../expressive.js'
+import * as functions from './functions.js'
 
-expressive.globalize({ ...expressive, ...elements })
+functions.globalize({...functions, ...elements})

@@ -1,5 +1,13 @@
 import counter from '../components/counter.js'
 
+const figureStyle = {
+  border: '1px solid #444',
+  display: 'inline-block',
+  margin: 'auto 0',
+  padding: '0 20px 20px',
+  textAlign: 'center',
+}
+
 export default () => article(
   { style: { maxWidth: '800px',
              margin: '0 auto' } },
@@ -46,7 +54,8 @@ export default () => article(
       'Increment'))`),
 
   figure(
-    h2('Recursive Counter'),
+    { style: figureStyle },
+    h3('Recursive Counter'),
     counter(0, 'counter-0')),
 
   p(`After loading the app with initial arguments, we might want to render it
@@ -62,7 +71,8 @@ export default () => article(
      server.`),
 
   figure(
-    h2('Recursive Counter'),
+    { style: figureStyle },
+    h3('Recursive Counter'),
     counter(0, 'counter-1')),
 
   (fetch('/data')
