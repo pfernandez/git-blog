@@ -158,7 +158,7 @@ Notice that the functional purity of our component is preserved because we've li
 
 This project began as an exploration of Lisp, lambda calculus, and functional programming. I wondered if it might be possible to implement a list processor using arrays, in order to gain the benefits of a Lisp syntax while being able to levarage all of the libraries we know and love because _it's just JavaScript_.
 
-## `evaluate()`
+## `evaluate(array)`
 
 The `evaluate` function works much like the core Lisp function `eval`, which recursively evaluates a tree of nested lists.
 
@@ -254,7 +254,7 @@ The list of functions is, of course, evolving, but at the time of this writing t
 * `each(array, fn)`
 * `entries(object)`
 * `eq(x, y)`
-* `evaluate([fn, ...values])`
+* `evaluate(array)`
 * `every(...values)`
 * `exists(value)`
 * `filter(array, fn)`
