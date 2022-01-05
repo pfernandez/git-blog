@@ -218,7 +218,7 @@ And now the counter begins at `2`. See the **Why Bother...** section below for a
 
 # Utilities
 
-I found myself adding utility functions to facilitate function composition (as opposed to sequential, procedural statements), to avoid mutation when it isn't really necessary, and to remove the visual noise of dot-property access. For example, `console.log(a, b, ...)` is exported as `log(a, b, ...)`, and the final argument is returned, allowing us to transparently wrap a function while logging to the console. `reverse()` is implemented as `[...array].reverse()`, `array.map(fn)` becomes `map(array, fn)` and so forth.
+I found myself adding utility functions to facilitate function composition (as opposed to sequential, procedural statements), to avoid mutation when it isn't really necessary, and to remove the visual noise of dot-property accessors. For example, `console.log(a, b, ...)` is exported as `log(a, b, ...)`. The final argument is returned, allowing us to transparently wrap a function while logging to the console. `reverse()` is implemented as `[...array].reverse()`, producing a new array rather than modifying the original array in place. `Object.keys(object)` becomes `keys(object)`, `array.map(fn)` becomes `map(array, fn)`, and so on.
 
 ## A Simpler, More Readable Syntax
 
@@ -228,12 +228,12 @@ Take the definition of `deepMap`. With plain ES6, the most concise, purely funct
 export const deepMap = (value, fn) =>
   Array.isArray(value)
     ? value.map(v => deepMap(v, fn))
-    : typeof value === 'object && value !== null
+    : typeof value === 'object' && value !== null
       ? Object.entries(object).reduce((o, [k, v]) => ({ ...o, [k]: fn(v) }), {})
       : fn(value)
 ```
 
-Not terrible, but the underlying object-oriented implementation of JavaScript clutters it with unnecessary information. Why do we need to know that `entries` is a property of the `Object` prototype? Why are we checking for `null`? And that `reduce` is just a hard-to-read way of creating a new map. _functions.js_ cleans it up.
+Not terrible, but the underlying object-oriented implementation of JavaScript clutters it with unnecessary information. Why do we need to express that `entries` is a property of the `Object` prototype? Why are we checking for `null`? And that `reduce` is just a hard-to-read way of creating one object from another. _functions.js_ cleans it up.
 
 ```js
 export const deepMap = (value, fn) =>
@@ -244,7 +244,7 @@ export const deepMap = (value, fn) =>
 
 ## Functions Provided
 
-The list of functions is, of course, evolving, but at the time of this writing these are the signatures:
+The list of functions is, of course, evolving, but at the time of this writing the signatures are
 
 * `and(x, y)`
 * `append(value, array)`
@@ -307,6 +307,6 @@ Now imagine we wanted to change the value `2` to `3`. If `x` is `true`, we'd be 
 const twoOrThree = [sum, 1, [ifElse, x, 1, 2]]
 ```
 
-we _can_ change `2` to `3` because we've converted the conditional expression to an function expression, which is really just an array of data.
+we _can_ change `2` to `3` because we've converted the conditional expression to a function expression, which is really just an array of data.
 
-It may or may not be possible to realize the full power of Lisp macros while limiting ourselves to native JavaScript. But it's instructive to see how far we can get. Could a self-improving machine learning algorithms be written this way?
+It may or may not be possible to realize the full power of Lisp macros while limiting ourselves to native JavaScript. But it's instructive to see how far we can get. Could a self-improving machine learning algorithm be written this way?
