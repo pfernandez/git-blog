@@ -179,11 +179,11 @@ evaluate(
 will log `1 2 3` to the console.
 
 * If first element in the array is a function, the array is a _function
-expression_. The remaining elements will be passsed to it as arguments.
-* Any arguments that themselves are function expressions will be evaluated
+application_. The remaining elements will be passsed to it as arguments.
+* Any arguments that are themselves function applications will be evaluated
 first, and so on down the tree.
 * Arrays without a leading function are treated as data and returned
-unaffected. Any function expressions they contain will _not_ be evaluated.
+unaffected. Any function applications they contain will _not_ be evaluated.
 
 ### Data as Code
 
@@ -206,7 +206,7 @@ const app =
         [counter, 0]]]]
 ```
 
-Now, because the app code is represented as data, we can update the inital app "state" between render cycles by creating a copy of the app with updated function arguments, then changing the start count from `0` to `2`.
+Now, because the app code is represented as data, we can change the structure of the code using plain JavaScript as a meta-language. In this case, we'll update the UI between render cycles by creating a copy of the application with the start of 2 instead of 0.
 
 ```js
 const app2 = deepMap(app, node => node === 0 ? 2 : node)
@@ -214,7 +214,7 @@ const app2 = deepMap(app, node => node === 0 ? 2 : node)
 evaluate(app2)
 ```
 
-And now the counter begins at `2`. See the **Why Bother...** section below for a bit more on this topic and its relationship to Lisp macros.
+And now the counter begins at 2. See the **Why Bother...** section below for a bit more on this topic and its relationship to Lisp macros.
 
 # Utilities
 
