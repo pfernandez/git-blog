@@ -7,7 +7,7 @@ A new project that (so far anyway), is split into two totally separate, complime
 
 I may break these into separate libraries at some point, but for now they live together for convenience. They'll be "done" when I've proven to myself that they add something of value to the JavaScript landscape (and when I've built something substantial enough with them to prove production-readiness).
 
-**This is a brain dump, not a library**. Please read it not as some kind of manifesto of assertions, but as an evolving group of ideas still in the process of formation. For the most part the code does work as described, but it's constantly evolving too.
+**This is still a brain dump, not a library yet**. Please read it not as some kind of manifesto of assertions, but as an evolving group of ideas still in the process of formation. For the most part the code does work as described, but it's constantly evolving too.
 
 ## Motivation
 
@@ -307,6 +307,6 @@ Now imagine we wanted to change the value `2` to `3`. If `x` is `true`, we'd be 
 const twoOrThree = [sum, 1, [ifElse, x, 1, 2]]
 ```
 
-we _can_ change `2` to `3` because we've converted the conditional expression to a function expression, which is really just an array of data.
+we _can_ change `2` to `3` because we've converted the conditional expression to a function application, which is really just an array of data.
 
 It may or may not be possible to realize the full power of Lisp macros while limiting ourselves to native JavaScript. But it's instructive to see how far we can get. Is escaping and unescaping code really the only way to write a macro? What are the limits of treating code as data by decomposing it into small functions instead? Could a self-improving machine learning algorithm be written this way?
