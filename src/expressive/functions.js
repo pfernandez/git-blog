@@ -93,12 +93,12 @@ export const globalize = object =>
 /**
  * Recursively evaluates an array expression.
  *
- * * If first element in the array is array function, the array is array "function
- * expression". The remaining elements will be passsed to it as its arguments.
- * * Any arguments that themselves are function expressions will be evaluated
+ * * If first element in the array is a function, the array is a "function
+ * application". The remaining elements will be passsed to it as its arguments.
+ * * Any arguments that themselves are function applications will be evaluated
  * first, and so on down the tree.
- * * Arrays without array leading function are treated as data and returned
- * unaffected. Any function expressions they contain will _not_ be evaluated.
+ * * Array expressions without a leading function are treated as data and returned
+ * unaffected. Any function applications they contain will _not_ be evaluated.
  *
  * @param {array} [f, ...rest]
  * @returns {*} The the result of the evaluated array expression.
