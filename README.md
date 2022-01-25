@@ -7,41 +7,7 @@ A new project that (so far anyway), is split into two totally separate, complime
 
 I may break these into separate libraries at some point, but for now they live together for convenience. They'll be "done" when I've proven to myself that they add something of value to the JavaScript landscape (and when I've built something substantial enough with them to prove production-readiness).
 
-**This is still a brain dump, not a library yet**. Please read it not as some kind of manifesto of assertions, but as an evolving group of ideas still in the process of formation. For the most part the code does work as described, but it's constantly evolving too.
-
-## Motivation
-
-To discover a simpler, more _expressive_ way to code for the web.
-
-> **expressive**
->
->   _adjective_
->
->  1. Effectively conveying thought or feeling.
->  2. Conveying (a specified quality or idea).
-
-Programming is a process of making ideas a reality, and uncovering new ideas along the way. This project itself is the expression of such a process. In fact, all symbolic logic, whether in a math textbook or a computer program, is composed of expressions.
-
-### Beauty Through Simplicity
-
-The qualites I'm looking for, then, are features that allow and encourage the _composition_ of web applications from only the simple components that they _must_ be made from. And nothing more.
-
-The syntax should be
-
-* Concise, with as few parts as possible while maintaining readability.
-* Easy to understand. A new user should be able to pick it up quickly.
-* Clean and visually pleasing. Beauty is not subjective; we can all see the
-  difference between a tidy desk and a cluttered one.
-* Powerful. It should have at least the capabilities of the base language, and
-  should express the same logic with fewer concepts.
-
-Lisp (or more directly, lambda calculus) points the way to simpler code because it was created from the fundamental axioms of logic upon which computing is based.
-
-### The Maze of JavaScript Frameworks
-
-Modern JavaScript frameworks, while giving us a structured way to build web applications, are full of complexity. They're hard for new users to learn, and often become difficult for even experienced developers to reason about. Much of this complexity comes from a reliance on state mutation, often mixed with additional concepts that must be understood and used correctly.
-
-There's also a second-order effect at play, where core decisions about how a framework will be used leads to a proliferation of "features" that would probably have been unnecessary had simpler choices been made in the initial design of the framework. Complexity leads to even more complexity.
+**This is still a just a brain dump**, an evolving group of ideas still in the process of formation. For the most part the code does work as described, but it's constantly evolving too.
 
 # Elements.js
 
@@ -102,7 +68,7 @@ const counter = (count = 0) =>
       { onclick: () => counter(count + 1) },
       'Increment'))
 
-body(counter())
+body.append(counter())
 ```
 
 A function element can take any number of children, and accepts an optional object of [DOM properties](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement#properties) as a first argument.
@@ -154,6 +120,26 @@ Our counter now begins at `1` instead of `0`.
 
 Notice that the functional purity of our component is preserved because we've limited the side effect to a thin external function-- devoid of internal logic-- that _passes data into_ the component as an argument.
 
+
+### Alternatively...
+
+Although immediately selecting and rendering a function element reduces the syntax needed to update the document, it may be too "magical". An alternative implementation is to keep the actual DOM mutations explicit.
+
+```js
+import { body, div, pre, button, append, replace } from './expressive/elements.js'
+
+const counter = (count = 0) =>
+  div({ id: 'counter-1' },
+    pre(count),
+    button(
+      { onclick: () => replace('#counter-1', counter(count + 1)) },
+      'Increment'))
+
+append(body, counter())
+```
+
+Here `body`, `append`, and `replace` are just syntactic sugar for `document.body.append()` and `document.querySelector('#' + id).replaceWith()`. This approach also simplifies the implementation of the function elements-- they're now just a fairly thin wrapper around `document.createElement()`.
+
 # Functions.js
 
 This project began as an exploration of Lisp, lambda calculus, and functional programming. I wondered if it might be possible to implement a list processor using arrays, in order to gain the benefits of a Lisp syntax while being able to levarage all of the libraries we know and love because _it's just JavaScript_.
@@ -178,12 +164,9 @@ evaluate(
 
 will log `1 2 3` to the console.
 
-* If first element in the array is a function, the array is a _function
-application_. The remaining elements will be passsed to it as arguments.
-* Any arguments that are themselves function applications will be evaluated
-first, and so on down the tree.
-* Arrays without a leading function are treated as data and returned
-unaffected. Any function applications they contain will _not_ be evaluated.
+* If first element in the array is a function, the array is a _function application_. The remaining elements will be passsed to it as arguments.
+* Any arguments that are themselves function applications will be evaluated first, and so on down the tree.
+* Arrays without a leading function are treated as data and returned unaffected. Any function applications they contain will _not_ be evaluated.
 
 ### Data as Code
 
