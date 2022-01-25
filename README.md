@@ -138,7 +138,7 @@ const counter = (count = 0) =>
 append(body, counter())
 ```
 
-Here `body`, `append`, and `replace` are just syntactic sugar for `document.body.append()` and `document.querySelector('#' + id).replaceWith()`. This approach also simplifies the implementation of the function elements-- they're now just a fairly thin wrapper around `document.createElement()`.
+Here `body`, `append`, and `replace` are just syntactic sugar for `document.body.append()` and `document.querySelector('#id').replaceWith()`. This approach also simplifies the implementation of the function elements-- they're now just a fairly thin wrapper around `document.createElement()`.
 
 # Functions.js
 
