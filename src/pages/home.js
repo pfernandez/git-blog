@@ -21,7 +21,6 @@ export default () => article(
      this:`),
 
   pre(`html(
-  doctype('html'),
   head(
     title('Expressive'),
     link({ rel: 'icon', href: 'img/favicon.ico' })),

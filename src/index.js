@@ -2,7 +2,6 @@ import './expressive/global.js'
 import home from './pages/home.js'
 
 html(
-  doctype('html'),
   head(
     title('Expressive'),
     link({ rel: 'icon', href: 'img/favicon.ico' })),

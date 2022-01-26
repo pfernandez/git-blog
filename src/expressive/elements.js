@@ -1,3 +1,5 @@
+import { log } from './functions.js'
+
 const tagNames = [
   'a', 'abbr', 'address', 'area', 'article', 'aside', 'audio', 'b', 'base',
   'bdi', 'bdo', 'blockquote', 'body', 'br', 'button', 'canvas', 'caption',
@@ -14,19 +16,10 @@ const tagNames = [
   'track', 'u', 'ul', 'var', 'video', 'wbr'
 ]
 
-const { isArray } = Array,
-      { keys, entries } = Object
-
-window.store = new Map()
-
-const isObject = x => typeof x === 'object' && !isArray(x) && x !== null
-
-const assignProperties = (baseElement, selector, properties) =>
-  entries(properties).reduce((el, [k, v]) =>
-    (el[k] = typeof v === 'function'
-      ? () => store.get(selector)[k]()
-      : v,
-    isObject(v)
+const assignProperties = (baseElement, properties) =>
+  Object.entries(properties).reduce((el, [k, v]) =>
+    (el[k] = v,
+    typeof v === 'object' && !Array.isArray(v)
       && assignProperties(el[k], selector, v),
     el),
   baseElement)
@@ -34,9 +27,9 @@ const assignProperties = (baseElement, selector, properties) =>
 const replaceChildren = (baseElement, childNodes) =>
   (baseElement.replaceChildren(...childNodes), baseElement)
 
-const replaceSubtree = (baseElement, selector, properties, children) =>
+const replaceSubtree = (baseElement, properties, children) =>
   replaceChildren(
-    assignProperties(baseElement, selector, properties),
+    assignProperties(baseElement, properties),
     children)
 
 const selector = (tagName, { id, className }) =>
@@ -45,59 +38,33 @@ const selector = (tagName, { id, className }) =>
       : className ? `.${className.split(' ').filter(s => s).join('.')}`
         : '')
 
-const augment = (properties, childNodes) =>
-  childNodes.reduce((o, node) =>
-    ({ ...o,
-       currentChildren:
-      [...o.currentChildren,
-        isObject(node)
-          ? selector(node.tagName.toLowerCase(), node)
-          : node] }),
-  { ...properties, currentChildren: [] })
-
-const prepare = (tagName, x, childNodes) =>
+const disambiguate = (tagName, x, childNodes) =>
   ({ tagName,
-     ...!isObject(x) || x instanceof Element
-       ? { childNodes: [x, ...childNodes],
-           properties: augment({}, [x, ...childNodes]),
-           selector: selector(tagName, {}) }
-       : { childNodes,
-           properties: augment(x, childNodes),
-           selector: selector(tagName, x) } })
+     ...typeof x === 'object' && !(x instanceof Node)
+       ? { childNodes,
+           properties: x,
+           selector: selector(tagName, x) }
+       : { childNodes: [x, ...childNodes],
+           properties: {},
+           selector: selector(tagName, {}) } })
 
-const changed = (x, y) =>
-  typeof x !== typeof y
-  || (typeof x === 'object' && x !== null
-    ? keys({ ...x, ...y }).some(k => changed(x[k], y[k]))
-    : typeof x !== 'function'
-      && x !== y)
-
-// TODO: Three approaches are possible:
-//
-// 1. Replace only elements whose properties have changed (current approach).
-// 2. Replace individual properties intead of replacing entire elements.
-// 3. Replace the called element with its entire subtree, regardless of changes.
-//
-// Each may be more efficient depending on the number of comparisions to be
-// made. Test them all and determine when to use one over the others.
 const update = (selector, properties, children) =>
-  document.querySelectorAll(selector).forEach(el => el.replaceWith(
-    replaceSubtree(el.cloneNode(), selector, properties, children)))
+  document.querySelectorAll(selector).forEach(
+    el => el.replaceWith(
+      replaceSubtree(el.cloneNode(), properties, children)))
 
 const baseElement = tagName =>
   ['html', 'head', 'body'].includes(tagName)
     ? 'html' === tagName ? document.documentElement : document[tagName]
     : document.createElement(tagName)
 
+const isRoot = args => log(args) && 0 // TODO
+
 const liveElement =
-  ({ childNodes, properties, selector, tagName },
-    lastProperties = store.get(selector)) =>
-    (store.set(selector, properties),
-    lastProperties
-      && changed(properties, lastProperties)
-      && update(selector, properties, childNodes),
-    replaceSubtree(
-      baseElement(tagName), selector, properties, childNodes))
+  ({ childNodes, properties, selector, tagName }) =>
+    isRoot({ childNodes, properties, selector, tagName })
+      ? update(selector, properties, childNodes)
+      : replaceSubtree(baseElement(tagName), properties, childNodes)
 
 /**
  * Generates an HTMLElement with children and inserts it into the DOM.
@@ -113,7 +80,7 @@ const liveElement =
  * @returns HTMLElement
  */
 export const element = (tagName, nodeOrProperties, ...nodes) =>
-  liveElement(prepare(tagName, nodeOrProperties, nodes))
+  liveElement(disambiguate(tagName, nodeOrProperties, nodes))
 
 export const el = element
 

@@ -9,6 +9,7 @@ express()
   .use(express.static(path))
   .get('/data', (_, res) => res.send({ count: 1 }))
   .get('/', (_, res) => res.send(`
+    <!doctype html>
     <link rel="icon" href="data:x-icon">
     <script src="//localhost:35729/livereload.js"></script>
     <script type="module" src="${main}"></script>
