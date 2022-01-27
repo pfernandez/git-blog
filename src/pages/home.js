@@ -36,10 +36,9 @@ export default () => article(
   h2('Stateless Components'),
 
   p('The ', code('home()'), ' element above is a custom element called a ', em(`
-     component`), `, analagous to a React component: Any function that returns a
-     live element is itself a live element. But instead of mutating state to
-     reload an element as in a React app, we simply call the component directly,
-     with new arguments.`),
+     component`), `, analagous to a React component. But instead of mutating
+     state to reload an element like in a React app, we call the component
+     directly, with new arguments.`),
 
   pre(`const counter = count =>
   div(

@@ -18,7 +18,6 @@ The idea is to compose the UI with _function elements_ that emit HTML, creating 
 import './expressive/global.js'
 
 html(
-  doctype('html'),
   head(
     title('Expressive'),
     link({ rel: 'icon', href: 'img/favicon.ico' })),
@@ -54,7 +53,7 @@ The code itself also may carry "state" as default function arguments or in separ
 
 ### A Simple Recursive Counter
 
-Any function that returns an element is itself an element, allowing us to create components analagous to those in React.js. But instead of mutating state to reload an element as in a React app, we simply call the component directly, with new arguments.
+Any function that returns an element can be composed together with elements, allowing us to create components analagous to those in React.js. But instead of mutating state to reload an element like we would in a React app, we simply call the component directly, with new arguments.
 
 If a function element is called while it already exists on the page, any changes to its input arguments (or those of its child elements) will cause a corresponding update on the screen.
 
@@ -68,7 +67,7 @@ const counter = (count = 0) =>
       { onclick: () => counter(count + 1) },
       'Increment'))
 
-body.append(counter())
+body(counter())
 ```
 
 A function element can take any number of children, and accepts an optional object of [DOM properties](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement#properties) as a first argument.
