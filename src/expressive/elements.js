@@ -31,18 +31,19 @@ const withProperties = (tagName, x, childNodes) =>
            properties: {},
            selector: selector(tagName, {}) } })
 
-const update = (selector, properties, children) =>
+const update = (selector, properties, childNodes) =>
   document.querySelectorAll(selector).forEach(
     el => el.replaceWith(
-      replaceSubtree(el.cloneNode(), properties, children)))
+      replaceSubtree(el.cloneNode(), properties, childNodes)))
 
 const baseElement = tagName =>
   ['html', 'head', 'body'].includes(tagName)
     ? 'html' === tagName ? document.documentElement : document[tagName]
     : document.createElement(tagName)
 
-const isRootElement = args => args.childNodes.some(
-  node => node instanceof Element && node.parentNode === null)
+const isRootElement = args =>
+  args.childNodes.some(
+    node => node instanceof Element && node.parentNode === null)
 
 const createLiveElement =
   ({ childNodes, properties, selector, tagName }) =>
@@ -90,15 +91,12 @@ const defaultElements = tagNames.reduce(
     ({ ...functions,
        [tagName]: (nodeOrProperties, ...nodes) =>
          element(tagName, nodeOrProperties, ...nodes) }),
-
-  { doctype: (qualifiedName, publicId = '', systemId = '') =>
-    document.implementation
-      .createDocumentType(qualifiedName, publicId, systemId),
-    fragment: (...childNodes) =>
-      replaceChildren(document.createDocumentFragment(), ...childNodes) })
+  { fragment:
+    (...childNodes) => replaceChildren(
+      document.createDocumentFragment(), ...childNodes) })
 
 export const {
-  doctype, fragment, imgmap,
+  fragment, imgmap,
   a, abbr, address, area, article, aside, audio, b, base,
   bdi, bdo, blockquote, body, br, button, canvas, caption,
   cite, code, col, colgroup, data, datalist, dd, del, details,

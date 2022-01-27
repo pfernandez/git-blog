@@ -35,12 +35,14 @@ html(
 There's no reason we shouldn't use the CSS modules approach here, and we can certainly use the CSS Modules library if desired. But why not simply move our styles into a normal JavaScript object in a separate file?
 
 ```js
-import { bodyStyles } from './style.js'
+import style from './style.js'
 
-body({ style: bodyStyles }, main(h1('Hello World'))
+const { container } = style 
+
+body({ style: container }, main(h1('Hello World'))
 ```
 
-(We might want unique strings appended to CSS class names, but a basic function should take care of it. Maybe call it `uniquify`?)
+For global styles, 
 
 ## Stateless Components
 

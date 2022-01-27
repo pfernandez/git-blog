@@ -4,13 +4,14 @@ import home from './pages/home.js'
 html(
   head(
     title('Expressive'),
-    link({ rel: 'icon', href: 'img/favicon.ico' })),
+    link({ rel: 'icon', href: 'img/favicon.ico' }),
+    link({ rel: 'stylesheet', href: 'pico.classless.css' }),
+    link({ rel: 'stylesheet', href: 'style.css' })),
   body(
-    { style:
-      { background: '#222',
-        color: '#eee', } },
     header(
-      h1('Expressive JS')),
+      hgroup(
+        h1('Expressive JS'),
+        h2('An experiment in pure, functional JavaScript'))),
     main(
       home())))
 

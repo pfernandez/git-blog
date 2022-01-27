@@ -1,12 +1,15 @@
 
-const counter = (count, id) =>
-  div({ id },
+const counter = (id, count) =>
+  div(
+    { id,
+      style: { fontSize: '3em',
+               maxWidth: '250px',
+               textAlign: 'center' } },
     pre(
-      { style: { fontSize: '4em',
-                 margin: '20px 0' } },
+      {},
       count),
     button(
-      { onclick: () => counter(count + 1, id) },
+      { onclick: () => counter(id, count + 1) },
       'Increment'))
 
 export default counter

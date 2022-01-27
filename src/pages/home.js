@@ -1,17 +1,6 @@
 import counter from '../components/counter.js'
 
-const figureStyle = {
-  border: '1px solid #444',
-  display: 'inline-block',
-  margin: 'auto 0',
-  padding: '0 20px 20px',
-  textAlign: 'center',
-}
-
-export default () => article(
-  { style: { maxWidth: '800px',
-             margin: '0 auto' } },
-
+export default () => section(
   p(`The Expressive library comes with functions called "live elements" that
      will immediately render the DOM when called.`),
 
@@ -52,9 +41,8 @@ export default () => article(
       'Increment'))`),
 
   figure(
-    { style: figureStyle },
     h3('Recursive Counter'),
-    counter(0, 'counter-0')),
+    counter('counter-1', 0)),
 
   p(`After loading the app with initial arguments, we might want to render it
      again with data fetched or computed asychronously. Let's replace the start
@@ -69,21 +57,21 @@ export default () => article(
      server.`),
 
   figure(
-    { style: figureStyle },
     h3('Recursive Counter'),
-    counter(0, 'counter-1')),
+    counter('counter-2', 0)),
 
   (fetch('/data')
     .then(response => response.json())
-    .then(({ count }) => counter(count, 'counter-1')), ''),
+    .then(({ count }) => counter('counter-2', count)), ''),
 
-  p('So state really only needs to exist in three places:',
-    ol(
-      li('In persistent storage such as a database server.'),
-      li('In the state rendered on the screen.'),
-      li(`In the code itself as default function arguments. While not stricly
+  p(strong('So state really only needs to exist in three places:')),
+
+  ol(
+    li('In persistent storage such as a database server.'),
+    li('In the state rendered on the screen.'),
+    li(`In the code itself as default function arguments. While not stricly
           necessary, these values are useful during fetch, for unit testing, and
           to enable static type checking in an otherwise dynamic system.`)),
-    `Our app itelf remains effectively stateless, consisting of only pure
-     functions.`))
+  `Our app itelf remains effectively stateless, consisting of only pure
+     functions.`)
 
