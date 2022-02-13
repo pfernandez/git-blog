@@ -5,6 +5,7 @@
   "author": "Paul Fernandez",
   "license": "ISC",
   "type": "module",
+  "private": "true",
   "keywords": [
     "javascript",
     "lisp"
@@ -19,13 +20,18 @@
   },
   "main": "server.js",
   "scripts": {
-    "start": "nodemon --ignore src"
+    "start": "webpack watch --mode development & nodemon --ignore src & wait"
+  },
+  "dependencies": {
+    "markdown-it": "^12.3.2"
   },
   "devDependencies": {
     "eslint": "^7.32.0",
     "express": "^4.17.1",
     "livereload": "^0.9.3",
-    "nodemon": "^2.0.14"
+    "nodemon": "^2.0.14",
+    "webpack": "^5.68.0",
+    "webpack-cli": "^4.9.2"
   },
   "eslintConfig": {
     "root": true,

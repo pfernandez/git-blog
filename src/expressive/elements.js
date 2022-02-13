@@ -11,7 +11,7 @@ const replaceChildren = (baseElement, childNodes) =>
   (baseElement.replaceChildren(...childNodes), baseElement)
 
 const replaceSubtree = (baseElement, properties, children) =>
-  replaceChildren(
+  log(baseElement) && replaceChildren(
     assignProperties(baseElement, properties),
     children)
 
@@ -58,8 +58,7 @@ const createLiveElement =
  * @param {string} tagName
  *
  * @param {Partial<HTMLElement> | string | number} [nodeOrProperties]
- * Either an object of [HTMLElement properties](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement#properties)
- * or a child node.
+ * Either an object of [HTMLElement properties](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement#properties) or a child node.
  *
  * @param {...(HTMLElement | string | number)} [childNodes]
  *
@@ -67,8 +66,6 @@ const createLiveElement =
  */
 export const element = (tagName, nodeOrProperties, ...nodes) =>
   createLiveElement(withProperties(tagName, nodeOrProperties, nodes))
-
-export const el = element
 
 const tagNames = [
   'a', 'abbr', 'address', 'area', 'article', 'aside', 'audio', 'b', 'base',

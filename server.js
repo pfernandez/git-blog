@@ -1,19 +1,20 @@
-import { createServer } from 'livereload'
 import express from 'express'
+import { createServer as livereload } from 'livereload'
 
-const main = 'index.js',
-      path = 'src',
+const sourcePath = 'src',
+      buildPath = 'dist',
       port = 3000
 
 express()
-  .use(express.static(path))
+  .use(express.static(sourcePath))
+  .use(express.static(buildPath))
   .get('/data', (_, res) => res.send({ count: 1 }))
   .get('/', (_, res) => res.send(`
     <!doctype html>
     <link rel="icon" href="data:x-icon">
     <script src="//localhost:35729/livereload.js"></script>
-    <script type="module" src="${main}"></script>
+    <script src="main.js"></script>
   `))
-  .listen(port, () => console.log(`Running at http://localhost:${port}`))
+  .listen(port, () => console.log(`\nRunning at http://localhost:${port}\n`))
 
-createServer().watch(path)
+livereload().watch(sourcePath)
