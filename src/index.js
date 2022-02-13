@@ -5,8 +5,9 @@ html(
   head(
     title('Expressive'),
     link({ rel: 'icon', href: 'img/favicon.ico' }),
-    link({ rel: 'stylesheet', href: 'pico.classless.css' }),
-    link({ rel: 'stylesheet', href: 'style.css' })),
+    link({ rel: 'stylesheet', href: '@picocss/pico/css/pico.classless.min.css' }),
+    link({ rel: 'stylesheet', href: 'style.css' }),
+    script({ type: 'text/javascript', src: 'markdown-it/dist/markdown-it.min.js' })),
   body(
     header(
       hgroup(

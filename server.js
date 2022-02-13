@@ -6,7 +6,7 @@ const main = 'index.js',
       port = 3000
 
 express()
-  .use(express.static(path))
+  .use(express.static(path), express.static('node_modules'))
   .get('/data', (_, res) => res.send({ count: 1 }))
   .get('/', (_, res) => res.send(`
     <!doctype html>
