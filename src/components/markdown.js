@@ -6,10 +6,26 @@ hljs.registerLanguage('javascript', javascript)
 const runScript = (el, str, script = document.createElement('script')) =>
   (script.append(str), el.append(script))
 
+const getResult = () =>
+  new MutationObserver((mutationList, observer) => {
+    const el = document.querySelector('[class^=language-result]')
+    if(el) {
+      runScript(document.body, `
+        var result = document.createElement('result')
+        result.append(${el.innerText})
+        document.querySelector('.${el.className}')
+                .parentElement
+                .replaceWith(result)`)
+      observer.disconnect()
+    }
+  }).observe(document.body, { childList: true, subtree: true })
+
 const processCodeBlock = (el, str, lang) =>
-  lang === 'live-js'
+  lang === 'live'
     ? (runScript(el, str), hljs.highlight(str, { language: 'js' }).value)
-    : hljs.highlight(str, { language: lang }).value
+    : lang.split('-')[0] === 'result'
+      ? getResult(el)
+      : hljs.highlight(str, { language: lang }).value
 
 const render = (markdown, el) =>
   Object.assign(el,

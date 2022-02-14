@@ -1,6 +1,5 @@
 import './lib/expressive/global.js'
 import home from './pages/home.js'
-import md from './components/markdown.js'
 
 html(
   head(
@@ -9,13 +8,13 @@ html(
     link({ rel: 'stylesheet',
            href: '@picocss/pico/css/pico.classless.min.css' }),
     link({ rel: 'stylesheet', href: 'style.css' }),
-    link({ rel: 'stylesheet', href: 'lib/highlight/styles/github.min.css' })),
+    link({ rel: 'stylesheet',
+           href: 'lib/highlight/styles/github-dark.min.css' })),
   body(
     header(
       hgroup(
         h1('Expressive JS'),
         h2('An experiment in functional JavaScript'))),
     main(
-      home(),
-      md('posts/overview.md'))))
+      home())))
 

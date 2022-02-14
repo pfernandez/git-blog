@@ -1,5 +1,5 @@
-import { createServer } from 'livereload'
 import express from 'express'
+import { createServer as livereload } from 'livereload'
 
 const main = 'index.js',
       path = 'src',
@@ -18,4 +18,4 @@ express()
   `))
   .listen(port, () => console.log(`Running at http://localhost:${port}`))
 
-createServer().watch(path)
+livereload({ extraExts: ['md'] }).watch(path)
