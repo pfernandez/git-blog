@@ -11,6 +11,8 @@ express()
   .get('/', (_, res) => res.send(`
     <!doctype html>
     <link rel="icon" href="data:x-icon">
+    <script type="text/javascript"
+      src="markdown-it/dist/markdown-it.min.js"></script>
     <script src="//localhost:35729/livereload.js"></script>
     <script type="module" src="${main}"></script>
   `))
