@@ -28,24 +28,20 @@ to a React component. But instead of mutating state to reload an element like in
 a React app, we call the component directly, with new arguments.
 
 ```live
-const counter = count =>
-  div(
+const counter = (id, count) =>
+  log(id, count, true) && div({ id },
     pre(
       { style:
         { fontSize: '4em',
           margin: '20px 0' } },
       count),
     button(
-      { onclick: () => counter(count + 1) },
+      { onclick: () => counter(id, count + 1) },
       'Increment'))
-
-// figure(h3('Recursive Counter'), counter('counter-1', 0))
 ```
 
 ```result-1
-em(`This is the result, but for some reason it returns undefined for more than
-    one level of elements. Time to think about static rendering? Note that the
-    counter above is defined in the global namespace.`)
+figure(h3('Recursive Counter'), counter('counter-1', 0))
 ```
 
 After loading the app with initial arguments, we might want to render it again

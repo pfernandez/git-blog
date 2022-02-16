@@ -7,18 +7,19 @@ const runScript = (el, str, script = document.createElement('script')) =>
   (script.append(str), el.append(script))
 
 const getResult = () =>
-  new MutationObserver((mutationList, observer) => {
-    const el = document.querySelector('[class^=language-result]')
-    if(el) {
-      runScript(document.body, `
-        var result = document.createElement('result')
-        result.append(${el.innerText})
-        document.querySelector('.${el.className}')
-                .parentElement
-                .replaceWith(result)`)
-      observer.disconnect()
-    }
-  }).observe(document.body, { childList: true, subtree: true })
+  new MutationObserver((mutations, observer, el = null) => (
+    mutations.find(
+      ({ target }) => el = target.querySelector('[class^=language-result]')),
+    el && (
+      runScript(
+        document.body,
+        `var result = document.createElement('result')
+         result.append(${el.innerText})
+         document.querySelector('.${el.className}')
+                 .parentElement
+                 .replaceWith(result)`),
+      observer.disconnect())))
+    .observe(document.body, { childList: true, subtree: true })
 
 const processCodeBlock = (el, str, lang) =>
   lang === 'live'
@@ -29,12 +30,11 @@ const processCodeBlock = (el, str, lang) =>
 
 const render = (markdown, el) =>
   Object.assign(el,
-    { innerHTML: window
-      .markdownit(
-        { html: true,
-          linkify: true,
-          typographer: true,
-          highlight: (str, lang) => processCodeBlock(el, str, lang) })
+    { innerHTML: window.markdownit(
+      { html: true,
+        linkify: true,
+        typographer: true,
+        highlight: (str, lang) => processCodeBlock(el, str, lang) })
       .render(markdown) })
 
 export default (markdown, el = document.createElement('md')) =>

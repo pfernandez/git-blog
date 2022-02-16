@@ -43,7 +43,8 @@ const baseElement = tagName =>
 
 const isRootElement = args =>
   args.childNodes.some(
-    node => node instanceof Element && node.parentNode === null)
+    node => node instanceof Element
+         && (!node.parentNode && node.parentNode?.parentNode === 'md'))
 
 const createLiveElement =
   ({ childNodes, properties, selector, tagName }) =>
