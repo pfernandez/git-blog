@@ -1,6 +1,5 @@
 import './lib/expressive/global.js'
 import home from './pages/home.js'
-import md from './components/markdown.js'
 
 html(
   head(
@@ -16,6 +15,4 @@ html(
         h1('Expressive JS'),
         h2('An experiment in functional JavaScript'))),
     main(
-      home(),
-      md('posts/overview.md'))))
-
+      home())))
