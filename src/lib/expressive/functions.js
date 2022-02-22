@@ -97,8 +97,9 @@ export const globalize = object =>
  * application". The remaining elements will be passsed to it as its arguments.
  * * Any arguments that themselves are function applications will be evaluated
  * first, and so on down the tree.
- * * Array expressions without a leading function are treated as data and returned
- * unaffected. Any function applications they contain will _not_ be evaluated.
+ * * Array expressions without a leading function are treated as data and
+ * returned unaffected. Any function applications they contain will _not_ be
+ * evaluated.
  *
  * @param {array} [f, ...rest]
  * @returns {*} The the result of the evaluated array expression.
@@ -117,3 +118,24 @@ export const evaluate = ([fn, ...rest]) =>
     map(rest, value =>
       !(isArray(value) && isFunction(first(value)))
         ? value : evaluate(value)))
+
+// TODO: Keep necessary spaces and combine regexes.
+export const parseLisp = string =>
+  eval(string
+    .replace(/\n/g, ' ')
+    .split(' ')
+    .filter(s => s)
+    .join()
+    .replace(/\(/g, '[')
+    .replace(/\)/g, ']'))
+
+/*
+evaluate(parseLisp(`
+  (log
+    1
+    (sum 1 1)
+    (sum
+      1
+      (sum 1 1)))
+`))
+*/

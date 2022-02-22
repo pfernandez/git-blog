@@ -3,6 +3,7 @@ import md from '../components/markdown.js'
 
 export default () => section(
   md(`
+
 The Expressive library comes with functions called "live elements" that will
 immediately render the DOM when called.
 
@@ -25,9 +26,9 @@ The code that generates the page you're reading right now looks like this:
 
 ## Stateless Components
 
-The \`home()\` element above is a custom element called a _component_, analagous
-to a React component. But instead of mutating state to reload an element like in
-a React app, we call the component directly, with new arguments.
+The custom \`home\` element above is called a _component_, analagous to a React
+component. But instead of mutating state to reload an element, we call it
+directly, with new arguments.
 
     const counter = count =>
       div(
@@ -38,13 +39,16 @@ a React app, we call the component directly, with new arguments.
           count),
         button(
           { onclick: () => counter(count + 1) },
-          'Increment'))`),
+          'Increment'))
+
+  `),
 
   figure(
     h3('Recursive Counter'),
     counter('counter-1', 0)),
 
   md(`
+
 After loading the app with initial arguments, we might want to render it again
 with data fetched or computed asychronously. Let's replace the start count
 again, this time with an API response that returns \`{ count: 1 }\`.
@@ -54,7 +58,9 @@ again, this time with an API response that returns \`{ count: 1 }\`.
       .then(({ count }) => counter(count))
 
 The counter now begins at the value \`code('1')\` that was stored on the
-server.`),
+server.
+
+  `),
 
   figure(
     h3('Recursive Counter'),
@@ -65,6 +71,7 @@ server.`),
     .then(({ count }) => counter('counter-2', count)), ''),
 
   md(`
+
 **So state really only needs to exist in three places:**
 
 1. In persistent storage such as a database server.
@@ -74,4 +81,6 @@ server.`),
    enable static type checking in an otherwise dynamic system.
 
 Our app itelf remains effectively stateless, consisting of only pure
-functions.`))
+functions.
+
+  `))
