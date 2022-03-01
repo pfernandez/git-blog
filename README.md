@@ -32,7 +32,7 @@ html(
 
 ### Modular CSS
 
-There's no reason we shouldn't use the CSS modules approach here, and we can certainly use the CSS Modules library if desired. But why not simply move our styles into a normal JavaScript object in a separate file?
+There's no reason we shouldn't use the CSS modules approach here, and we can certainly use the CSS Modules library if desired. But why not simply move our styles into a normal JavaScript object in a separate file? This may or may not be a good idea, but it deserves some exploration to see what problems will arise.
 
 ```js
 import style from './style.js'
@@ -41,8 +41,6 @@ const { container } = style
 
 body({ style: container }, main(h1('Hello World'))
 ```
-
-For global styles, 
 
 ## Stateless Components
 
