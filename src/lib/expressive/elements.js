@@ -5,7 +5,7 @@ const assignProperties = (baseElement, properties) =>
     typeof v === 'object' && !Array.isArray(v)
       && assignProperties(el[k], v),
     el),
-  baseElement)
+                                    baseElement)
 
 const replaceChildren = (baseElement, childNodes) =>
   (baseElement.replaceChildren(...childNodes), baseElement)

@@ -4,7 +4,8 @@ import javascript from '../lib/highlight/es/languages/javascript.min.js'
 hljs.registerLanguage('javascript', javascript)
 
 export default (markdown, el = document.createElement('md')) =>
-  Object.assign(el,
+  Object.assign(
+    el,
     { innerHTML: window
       .markdownit(
         { html: true,

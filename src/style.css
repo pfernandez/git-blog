@@ -1,4 +1,127 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Playball&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Source+Code+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+:root {
+  --border: 1px solid rgb(0 0 0 / 10%);
+}
+
+html {
+  background: snow;
+  font-weight: 300;
+  margin: 0 15px;
+}
+
+html,
+button {
+  font-family: Poppins, Helvetica, sans-serif;
+  font-size: 18px;
+}
+
+main {
+  margin: 0 auto;
+  max-width: 800px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 500;
+  letter-spacing: 1px;
+  margin: 50px 0 0;
+  text-transform: uppercase;
+}
+
+h1 {
+  font-family: Poppins;
+  font-size: 3.5em;
+  font-weight: 600;
+  line-height: 1.2;
+  text-shadow: 2px 2px 1px palegreen,
+               4px 4px 1px magenta,
+               6px 6px 1px rebeccapurple;
+}
+
+@media (min-width: 580px) {
+  h1 {
+    font-size: 6em;
+  }
+}
+
+@media (min-width: 960px) {
+  h1 {
+    font-size: 9em;
+  }
+}
+
+h2 {
+  font-weight: 400;
+}
+
+header hgroup {
+  border-bottom: var(--border);
+  margin-bottom: 40px;
+  padding: 0 0 25px;
+}
+
+header h1, header h2 {
+  display: inline-block;
+}
+
+header h1 {
+  font-family: 'Playball', cursive, sans-serif;
+  font-size: 3em;
+  margin: 10px 20px 0 0;
+  text-shadow: 1px 1px 1px rgb(0 0 0 / 20%);
+  text-transform: none;
+}
+
+header h2 {
+  color: rgb(0 0 0 / 70%);
+  font-size: 0.9em;
+  font-weight: 300;
+  margin-top: 15px;
+}
+
+code, pre {
+  background: ghostwhite;
+  font-family: 'Source Code Pro', monospace;
+  font-size: 100%;
+}
+
 pre {
+  border-top: var(--border);
+  border-bottom: var(--border);
+  margin: 30px 0;
   padding: 20px;
-  text-align: 'center';
+}
+
+figure {
+  margin: 40px 0 50px;
+  max-width: 300px;
+}
+
+figure pre {
+  font-size: 3em;
+  margin: 10px 0 20px;
+}
+
+button {
+  background: lavender;
+  border: 1.5px solid;
+  box-shadow: 1px 1px, 2px 2px, 3px 3px;
+  font-size: 1em;
+  font-weight: 500;
+  padding: 15px 25px 13px;
+  margin: 0 auto;
+  text-transform: uppercase;
+  transition: box-shadow 50ms;
+  width: 100%;
+}
+
+button:active {
+  box-shadow: none;
+}
+
+b,
+strong,
+li::marker {
+  font-weight: 500;
 }
