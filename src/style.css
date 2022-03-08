@@ -1,20 +1,31 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Playball&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Source+Code+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
 :root {
   --border: 1px solid rgb(0 0 0 / 10%);
 }
 
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
 html {
   background: snow;
   font-weight: 300;
-  margin: 0 15px;
 }
 
 html,
 button {
   font-family: Poppins, Helvetica, sans-serif;
   font-size: 18px;
+}
+
+body {
+  padding: 0 15px 10px 15px;
 }
 
 main {
@@ -37,18 +48,6 @@ h1 {
   text-shadow: 2px 2px 1px palegreen,
                4px 4px 1px magenta,
                6px 6px 1px rebeccapurple;
-}
-
-@media (min-width: 580px) {
-  h1 {
-    font-size: 6em;
-  }
-}
-
-@media (min-width: 960px) {
-  h1 {
-    font-size: 9em;
-  }
 }
 
 h2 {
@@ -83,34 +82,36 @@ header h2 {
 code, pre {
   background: ghostwhite;
   font-family: 'Source Code Pro', monospace;
-  font-size: 100%;
+  font-size: 0.95em;
 }
 
 pre {
   border-top: var(--border);
   border-bottom: var(--border);
-  margin: 30px 0;
-  padding: 20px;
+  margin: 30px -23px;
+  padding: 23px;
+  overflow: scroll;
 }
 
 figure {
-  margin: 40px 0 50px;
-  max-width: 300px;
+  margin: 45px auto 55px;
+  max-width: 500px;
+  text-align: center;
 }
 
 figure pre {
   font-size: 3em;
-  margin: 10px 0 20px;
+  margin: 15px 0 20px;
 }
 
 button {
   background: lavender;
   border: 1.5px solid;
   box-shadow: 1px 1px, 2px 2px, 3px 3px;
-  font-size: 1em;
-  font-weight: 500;
-  padding: 15px 25px 13px;
+  font-weight: 400;
+  padding: 13px 5px 11px;
   margin: 0 auto;
+  max-width: 190px;
   text-transform: uppercase;
   transition: box-shadow 50ms;
   width: 100%;
@@ -125,3 +126,20 @@ strong,
 li::marker {
   font-weight: 500;
 }
+
+@media (min-width: 580px) {
+  h1 {
+    font-size: 6em;
+  }
+}
+
+@media (min-width: 960px) {
+  h1 {
+    font-size: 9em;
+  }
+
+  pre {
+    margin: 30px 0;
+  }
+}
+

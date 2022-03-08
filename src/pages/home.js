@@ -8,47 +8,46 @@ export default () => section(
 
   ## Just write the UI already
 
-  JavaScript frameworks are needlessly complicated. There are a lot of reasons
-  for this, but the biggest culprit is **state**. Some state (the text and
-  and container elements that comprise this web page, for example) is desirable,
-  but otherwise it's best to avoid state wherever possible. _Live Elements_ are
-  designed to let you simply write what should appear on the screen.
+  JavaScript frameworks are needlessly complex. There are a lot of reasons for
+  this, but the biggest culprit is **state**. Some state, such as the text and
+  and container elements that comprise the "state" of this web page, is
+  desirable, but otherwise it's best to avoid it wherever possible. _Live
+  Elements_ are designed to let you simply write what should
+  appear on the screen.
 
-  ## An Example
+  ## Simply Declarative
 
-  The code that generates the page you're reading right now looks like this:
+  Live Elements provide a functional, elegant way to express the DOM that maps
+  directly to HTML without introducing any additional concepts.
 
   \`\`\`js
+  import 'expressive/elements.js'
+
   html(
     head(
-      title('Expressive'),
-      link({ rel: 'icon', href: 'img/favicon.ico' })
+      title('A Basic Web Page'),
+      link({ rel: 'icon', href: 'favicon.png' })
       link({ rel: 'stylesheet', href: 'style.css' })),
     body(
       header(
-        h1('Expressive JS')),
+        h1('Welcome to My Website')),
       main(
-        home())))
+        p('Hello world!'))))
   \`\`\`
 
   ## Stateless Components
 
-  The custom \`home\` element above is called a _component_, analagous to a
-  React component. But instead of introducing the concept of
-  [state change](https://reactjs.org/docs/state-and-lifecycle.html) to indicate
-  that an element should be reloaded, we call it directly with new arguments.
+  We can create custom elements called _components_, analagous to React
+  components. But instead of introducing the concept of
+  [component state](https://reactjs.org/docs/state-and-lifecycle.html) to
+  indicate that an element should be reloaded, we call it directly with new
+  arguments.
 
   \`\`\`js
   const counter = count =>
-    div(
-      pre(
-        { style:
-          { fontSize: '4em',
-            margin: '20px 0' } },
-        count),
-      button(
-        { onclick: () => counter(count + 1) },
-        'Increment'))
+    div(pre(count),
+        button({ onclick: () => counter(count + 1) },
+               'Increment'))
   \`\`\`
 
   Here it is in action:
@@ -71,7 +70,7 @@ export default () => section(
     .then(({ count }) => counter(count))
   \`\`\`
 
-  The counter now begins at the value \`code('1')\` that was stored on the
+  The counter now begins at the value \`1\` that was stored on the
   server.
 
   `),
@@ -88,11 +87,13 @@ export default () => section(
 
   **So state really only needs to exist in three places:**
 
-  1. In persistent storage such as a database server.
-  2. In the state rendered on the screen.
+  1. In the state rendered on the screen at any given moment.
+  2. In persistent storage such as a database server.
   3. In the code itself as default function arguments. While not stricly
-     necessary, these values are useful during fetch, for unit testing, and to
-     enable static type checking in an otherwise dynamic system.
+     necessary, these initial values are useful to provide default values while
+     waiting for asynchronously fetched data, for unit testing, and to infer
+     function input types when used with a type checker such as
+     [tsserver](https://github.com/Microsoft/TypeScript/wiki/Standalone-Server-%28tsserver%29).
 
   Our app itelf remains effectively stateless, consisting of only pure
   functions.
