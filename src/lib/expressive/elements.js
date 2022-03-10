@@ -1,14 +1,16 @@
 
 const assignProperties = (baseElement, properties) =>
-  Object.entries(properties).reduce((el, [k, v]) =>
-    (el[k] = v,
-    typeof v === 'object' && !Array.isArray(v)
+  Object.entries(properties).reduce(
+    (el, [k, v]) =>
+      (el[k] = v,
+      typeof v === 'object' && !Array.isArray(v)
       && assignProperties(el[k], v),
-    el),
-                                    baseElement)
+      el),
+    baseElement)
 
 const replaceChildren = (baseElement, childNodes) =>
-  (baseElement.replaceChildren(...childNodes), baseElement)
+  (childNodes.length && baseElement.replaceChildren(...childNodes),
+  baseElement)
 
 const replaceSubtree = (baseElement, properties, children) =>
   replaceChildren(
@@ -41,8 +43,8 @@ const baseElement = tagName =>
     ? 'html' === tagName ? document.documentElement : document[tagName]
     : document.createElement(tagName)
 
-const isRootElement = args =>
-  args.childNodes.some(
+const isRootElement = ({ childNodes }) =>
+  childNodes.some(
     node => node instanceof Element && node.parentNode === null)
 
 const createLiveElement =

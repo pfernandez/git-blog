@@ -25,6 +25,8 @@ button {
 }
 
 body {
+  display: flex;
+  flex-wrap: wrap;
   padding: 0 15px 10px 15px;
 }
 
@@ -52,6 +54,10 @@ h1 {
 
 h2 {
   font-weight: 400;
+}
+
+header {
+  width: 100%;
 }
 
 header hgroup {
@@ -111,6 +117,7 @@ button {
   font-weight: 400;
   padding: 13px 5px 11px;
   margin: 0 auto;
+  min-width: 190px;
   max-width: 190px;
   text-transform: uppercase;
   transition: box-shadow 50ms;
@@ -125,6 +132,16 @@ b,
 strong,
 li::marker {
   font-weight: 500;
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav button {
+  max-width: 100%;
 }
 
 @media (min-width: 580px) {

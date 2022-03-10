@@ -1,6 +1,6 @@
 import './lib/expressive/global.js'
-import home from './pages/home.js'
-import navLink from './components/nav-link.js'
+import post from './components/post.js'
+import navigation from './components/navigation.js'
 
 html(
   head(
@@ -14,7 +14,6 @@ html(
       hgroup(
         h1('Expressive JS'),
         h2('An Experiment in Functional JavaScript'))),
-    main(home()),
-    // nav(ul(li(navLink('Live Elements', '/live-elements'))))
-  ))
+    main(post(location.pathname)),
+    navigation()))
 

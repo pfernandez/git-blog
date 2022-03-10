@@ -3,14 +3,12 @@ import javascript from '../lib/highlight/es/languages/javascript.min.js'
 
 hljs.registerLanguage('javascript', javascript)
 
-export default (markdown, el = document.createElement('md')) =>
-  Object.assign(
-    el,
-    { innerHTML: window
-      .markdownit(
-        { html: true,
-          linkify: true,
-          typographer: true,
-          highlight: (str, language) =>
-            hljs.highlight(str, { language }).value })
-      .render(markdown) })
+export default markdown =>
+  element('md',
+          { innerHTML: markdownit(
+            { html: true,
+              linkify: true,
+              typographer: true,
+              highlight: (str, language) =>
+                hljs.highlight(str, { language }).value })
+            .render(markdown) })

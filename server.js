@@ -8,7 +8,7 @@ const main = 'index.js',
 express()
   .use(express.static(path), express.static('node_modules'))
   .get('/data', (_, res) => res.send({ count: 1 }))
-  .get('/', (_, res) => res.send(`
+  .get('*', (_, res) => res.send(`
     <!doctype html>
     <link rel="icon" href="data:x-icon">
     <script type="text/javascript"
