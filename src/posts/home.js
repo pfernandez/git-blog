@@ -1,1 +1,1 @@
-export default () => article(h1('Welcome to my website!'))
+export default () => article('Welcome to my website!')

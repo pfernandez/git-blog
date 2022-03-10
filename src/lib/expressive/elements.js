@@ -43,14 +43,23 @@ const baseElement = tagName =>
     ? 'html' === tagName ? document.documentElement : document[tagName]
     : document.createElement(tagName)
 
-const isRootElement = ({ childNodes }) =>
+// FIXME: When a root element's only child is a string or number, the test
+// fails. Example: `navLink.onclick` only works if there's at least one child
+// Element of `main`. Convert all non-element children to `TextNode`s.
+//
+// It also seems that each `post` must have the same wrapper element (i.e.
+// `article`). When the root (`main`) is called, all children should be
+// replaced, regardless of what they are.
+//
+// Finally, the live `figure` examples return `undefined`: `figure` and all its
+// children have `null` `parentNode`s after `navLink` is clicked.
+const isRootElement = childNodes =>
   childNodes.some(
     node => node instanceof Element && node.parentNode === null)
 
 const createLiveElement =
   ({ childNodes, properties, selector, tagName }) =>
-    document.readyState === 'complete'
-    && isRootElement({ childNodes, properties, selector, tagName })
+    document.readyState === 'complete' && isRootElement(childNodes)
       ? update(selector, properties, childNodes)
       : replaceSubtree(baseElement(tagName), properties, childNodes)
 
