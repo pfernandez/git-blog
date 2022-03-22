@@ -291,4 +291,4 @@ const twoOrThree = [sum, 1, [ifElse, x, 1, 2]]
 
 we _can_ change `2` to `3` because we've converted the conditional expression to a function application, which is really just an array of data.
 
-It may or may not be possible to realize the full power of Lisp macros while limiting ourselves to native JavaScript. But it's instructive to see how far we can get. Is escaping and unescaping code really the only way to write a macro? What are the limits of treating code as data by decomposing it into small functions instead? Could a self-improving machine learning algorithm be written this way?
+It may or may not be possible to realize the full power of Lisp macros while limiting ourselves to native JavaScript. But it's instructive to see how far we can get. Is escaping and unescaping code really the only way to write a macro? What are the limits of treating code as data by decomposing it into small functions instead?
