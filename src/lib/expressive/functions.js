@@ -88,7 +88,7 @@ export const walk = (root, f) => each(f(root), node => walk(node, f))
 export const globalize = object =>
   each(entries(object),
     /* global global, window */
-    ([k, v]) => window ? window[k] = v : global[k] = v)
+       ([k, v]) => window ? window[k] = v : global[k] = v)
 
 /**
  * Recursively evaluates an array expression.
@@ -115,9 +115,9 @@ export const globalize = object =>
  */
 export const evaluate = ([fn, ...rest]) =>
   apply(fn,
-    map(rest, value =>
-      !(isArray(value) && isFunction(first(value)))
-        ? value : evaluate(value)))
+        map(rest, value =>
+          !(isArray(value) && isFunction(first(value)))
+            ? value : evaluate(value)))
 
 // TODO: Keep necessary spaces and combine regexes.
 export const parseLisp = string =>
