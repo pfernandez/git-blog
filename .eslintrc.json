@@ -13,18 +13,15 @@
     "indent": [ "warn", 2, {
         "CallExpression": { "arguments": "first" },
         "ImportDeclaration": "first",
+        "MemberExpression": "off",
         "ObjectExpression": "first",
-        "VariableDeclarator": {
-          "var": 2,
-          "let": 2,
-          "const": 3 } } ],
+        "VariableDeclarator": { "var": 2, "let": 2, "const": 3 } } ],
     "key-spacing": [ "warn", { "mode": "minimum" } ],
     "linebreak-style": [ "error", "unix" ],
     "no-extra-parens": "warn",
     "no-multiple-empty-lines": [ "warn", { "max": 2, "maxEOF": 1 } ],
     "no-multi-spaces": [ "warn", {
-        "ignoreEOLComments": true,
-        "exceptions": { "Property": false } } ],
+        "ignoreEOLComments": true, "exceptions": { "Property": false } } ],
         "no-trailing-spaces": "warn",
     "no-undef": "warn",
     "no-unused-vars": [ "warn", {
@@ -36,7 +33,6 @@
         "overrides": {
           "=": "ignore" } } ],
     "prefer-rest-params": "warn",
-    "quote-props": [ "warn", "as-needed" ],
     "quotes": [ "warn", "single" ],
     "semi": [ "warn", "never" ],
     "sort-imports": "warn",
@@ -81,6 +77,9 @@
     "sum": "readonly",
     "type": "readonly",
     "walk": "readonly",
+
+    "on": "readonly",
+    "navigateTo": "readonly",
 
     "a": "readonly",
     "abbr": "readonly",

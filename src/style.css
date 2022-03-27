@@ -79,7 +79,6 @@ header h1 {
 }
 
 header h2 {
-  color: rgb(0 0 0 / 70%);
   font-size: 0.9em;
   font-weight: 300;
   margin-top: 15px;
@@ -160,3 +159,9 @@ nav button {
   }
 }
 
+@media (prefers-color-scheme: dark) {
+  html {
+    background: #181818;
+    color: snow;
+  }
+}

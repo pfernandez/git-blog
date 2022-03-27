@@ -81,6 +81,8 @@ export const partial = (fn, ...values) => fn.bind(null, ...values)
 
 export const reverse = array => [...array].reverse()
 
+export const flat = (array, depth) => array.flat(depth)
+
 export const sum = (...values) => values.reduce((x, y) => x + y)
 
 export const walk = (root, f) => each(f(root), node => walk(node, f))

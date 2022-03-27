@@ -23,13 +23,13 @@ const selector = (tagName, { id, className }) =>
       : className ? `.${className.split(' ').filter(s => s).join('.')}`
         : '')
 
-const withProperties = (tagName, x, childNodes) =>
+const normalize = (tagName, x, childNodes) =>
   ({ tagName,
-     ...typeof x === 'object' && !(x instanceof Node)
-       ? { childNodes,
+     ...typeof x === 'object' && !(Array.isArray(x) || x instanceof Node)
+       ? { childNodes: childNodes.flat(),
            properties: x,
            selector: selector(tagName, x) }
-       : { childNodes: [x, ...childNodes],
+       : { childNodes: [x, ...childNodes].flat(),
            properties: {},
            selector: selector(tagName, {}) } })
 
@@ -39,20 +39,11 @@ const update = (selector, properties, childNodes) =>
       replaceSubtree(el.cloneNode(), properties, childNodes)))
 
 const baseElement = tagName =>
-  ['html', 'head', 'body'].includes(tagName)
-    ? 'html' === tagName ? document.documentElement : document[tagName]
-    : document.createElement(tagName)
+  'html' === tagName ? document.documentElement
+    : ['head', 'body'].includes(tagName) ? document[tagName]
+      : 'imgmap' === tagName ? document.createElement('map')
+        : document.createElement(tagName)
 
-// FIXME: When a root element's only child is a string or number, the test
-// fails. Example: `navLink.onclick` only works if there's at least one child
-// Element of `main`. Convert all non-element children to `TextNode`s.
-//
-// It also seems that each `post` must have the same wrapper element (i.e.
-// `article`). When the root (`main`) is called, all children should be
-// replaced, regardless of what they are.
-//
-// Finally, the live `figure` examples return `undefined`: `figure` and all its
-// children have `null` `parentNode`s after `navLink` is clicked.
 const isRootElement = childNodes =>
   childNodes.some(
     node => node instanceof Element && node.parentNode === null)
@@ -60,7 +51,7 @@ const isRootElement = childNodes =>
 const createLiveElement =
   ({ childNodes, properties, selector, tagName }) =>
     document.readyState === 'complete' && isRootElement(childNodes)
-      ? update(selector, properties, childNodes)
+      ? log(tagName) && update(selector, properties, childNodes)
       : replaceSubtree(baseElement(tagName), properties, childNodes)
 
 /**
@@ -77,7 +68,7 @@ const createLiveElement =
  * @returns HTMLElement
  */
 export const element = (tagName, nodeOrProperties, ...nodes) =>
-  createLiveElement(withProperties(tagName, nodeOrProperties, nodes))
+  createLiveElement(normalize(tagName, nodeOrProperties, nodes))
 
 export const el = element
 
@@ -114,7 +105,7 @@ export const {
   dfn, dialog, div, dl, dt, em, embed, fieldset, figcaption,
   figure, footer, form, h1, h2, h3, h4, h5, h6, head,
   header, hgroup, hr, html, i, iframe, img, input, ins, kbd,
-  label, legend, li, link, main, map, mark, menu, meta,
+  label, legend, li, link, main, mark, menu, meta,
   meter, nav, noscript, object, ol, optgroup, option, output,
   p, param, picture, pre, progress, q, rp, rt, ruby, s,
   samp, script, section, select, slot, small, source, span,
