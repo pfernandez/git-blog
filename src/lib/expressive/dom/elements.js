@@ -1,42 +1,16 @@
 
-const assignProperties = (baseElement, properties) =>
+const assignProperties = (element, properties) =>
   Object.entries(properties).reduce(
     (el, [k, v]) =>
       (el[k] = v,
       typeof v === 'object' && !Array.isArray(v)
       && assignProperties(el[k], v),
       el),
-    baseElement)
+    element)
 
-const replaceChildren = (baseElement, childNodes) =>
-  (childNodes.length && baseElement.replaceChildren(...childNodes),
-  baseElement)
-
-const replaceSubtree = (baseElement, properties, children) =>
-  replaceChildren(
-    assignProperties(baseElement, properties),
-    children)
-
-const selector = (tagName, { id, className }) =>
-  tagName
-    + (id ? `#${id}`
-      : className ? `.${className.split(' ').filter(s => s).join('.')}`
-        : '')
-
-const normalize = (tagName, x, childNodes) =>
-  ({ tagName,
-     ...typeof x === 'object' && !(Array.isArray(x) || x instanceof Node)
-       ? { childNodes: childNodes.flat(),
-           properties: x,
-           selector: selector(tagName, x) }
-       : { childNodes: [x, ...childNodes].flat(),
-           properties: {},
-           selector: selector(tagName, {}) } })
-
-const update = (selector, properties, childNodes) =>
-  document.querySelectorAll(selector).forEach(
-    el => el.replaceWith(
-      replaceSubtree(el.cloneNode(), properties, childNodes)))
+const attachSubtree = ({ element, properties, childNodes }) =>
+  (childNodes.length && element.replaceChildren(...childNodes),
+  assignProperties(element, properties))
 
 const baseElement = tagName =>
   'html' === tagName ? document.documentElement
@@ -44,15 +18,11 @@ const baseElement = tagName =>
       : 'imgmap' === tagName ? document.createElement('map')
         : document.createElement(tagName)
 
-const isRootElement = childNodes =>
-  childNodes.some(
-    node => node instanceof Element && node.parentNode === null)
-
-const createLiveElement =
-  ({ childNodes, properties, selector, tagName }) =>
-    document.readyState === 'complete' && isRootElement(childNodes)
-      ? log(tagName) && update(selector, properties, childNodes)
-      : replaceSubtree(baseElement(tagName), properties, childNodes)
+const prepare = (tagName, x, childNodes) =>
+  ({ element: baseElement(tagName),
+     ...typeof x === 'object' && !(Array.isArray(x) || x instanceof Node)
+       ? { childNodes: childNodes.flat(), properties: x }
+       : { childNodes: [x, ...childNodes].flat(), properties: {} } })
 
 /**
  * Generates an HTMLElement with children and inserts it into the DOM.
@@ -67,10 +37,11 @@ const createLiveElement =
  *
  * @returns HTMLElement
  */
-export const element = (tagName, nodeOrProperties, ...nodes) =>
-  createLiveElement(normalize(tagName, nodeOrProperties, nodes))
+export const createElement = (tagName, nodeOrProperties, ...nodes) =>
+  attachSubtree(prepare(tagName, nodeOrProperties, nodes))
 
-export const el = element
+const appendChildren = (element, ...children) =>
+  (element.append(...children), element)
 
 const tagNames = [
   'a', 'abbr', 'address', 'area', 'article', 'aside', 'audio', 'b', 'base',
@@ -92,10 +63,10 @@ const defaultElements = tagNames.reduce(
   (functions, tagName) =>
     ({ ...functions,
        [tagName]: (nodeOrProperties, ...nodes) =>
-         element(tagName, nodeOrProperties, ...nodes) }),
+         createElement(tagName, nodeOrProperties, ...nodes) }),
   { fragment:
-    (...childNodes) => replaceChildren(
-      document.createDocumentFragment(), ...childNodes) })
+    (...childNodes) =>
+      appendChildren(document.createDocumentFragment(), ...childNodes) })
 
 export const {
   fragment, imgmap,
@@ -113,3 +84,23 @@ export const {
   template, textarea, tfoot, th, thead, time, title, tr,
   track, u, ul, video, wbr
 } = defaultElements
+
+const selector = el =>
+  el.tagName
+    + (el.id ? `#${el.id}`
+      : el.className ? `.${el.className.split(' ').filter(s => s).join('.')}`
+        : '')
+
+/**
+ * Replaces all matching live elements with a new element, then returns an array
+ * of references to the updated elements. An existing element is considered a
+ * match if it shares a `tagName` + `id` + `className` combination with the
+ * replacement.
+ *
+ * @param {HTMLElement} element
+ * @returns {HTMLElement[]}
+ */
+export const update = element =>
+  [...document.querySelectorAll(selector(element))].map(
+    el => (el.replaceWith(element), el))
+
