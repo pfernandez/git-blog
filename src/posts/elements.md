@@ -51,33 +51,37 @@ const counter = count =>
 
 Here it is in action:
 
-<script>
-  figure(
-    h3('Recursive Counter'),
-    counter('counter-1', 0)),
+<script id='s1'>
+// The script element appears but isn't evaluated. Could iterate through and
+// `eval` all of them, but markdownit may be able to do it.
+// https://stackoverflow.com/a/22745553/2303148
+// const el = figure(h3('Recursive Counter'), counter('counter-1', 0))
+// document.getElementbyID('s1').after(el)
+console.log('TODO: Inline scripts') // nothing
 </script>
 
 After loading the app with initial arguments, we might want to render it again
 with data fetched or computed asychronously. Let's replace the start count
 again, this time with an API response that returns \`{ count: 1 }\`.
 
-<script>
-  fetch('/data')
-    .then(response => response.json())
-    .then(({ count }) => counter(count))
-</script>
+```js
+fetch('/data').then(response => response.json())
+              .then(({ count }) => update(counter(count)))
+```
 
 The counter now begins at the value \`1\` that was stored on the
 server.
 
 <script>
-  figure(
-    h3('Recursive Counter'),
-    counter('counter-2', 0)),
+  document.currentScript.after(
+    figure(
+      h3('Recursive Counter'),
+      counter('counter-2', 0)))
+</script>
 
-  (fetch('/data')
-    .then(response => response.json())
-    .then(({ count }) => counter('counter-2', count)), ''),
+<script>
+  fetch('/data').then(response => response.json())
+                .then(({ count }) => counter('counter-2', count))
 </script>
 
 **So state really only needs to exist in three places:**

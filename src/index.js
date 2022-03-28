@@ -15,5 +15,5 @@ html(
       hgroup(
         h1('Expressive JS'),
         h2('An Experiment in Functional JavaScript'))),
-    main(post(pathname)),
-    nav(sidebar(posts))))
+    nav(sidebar(posts)),
+    main(post(pathname))))

@@ -5,21 +5,19 @@ const { registerLanguage, highlight } = hljs
 
 registerLanguage('javascript', javascript)
 
-const md = (props = {}, markdown = '') => createElement('md', props, markdown)
+const config =
+  { html: true,
+    linkify: true,
+    typographer: true,
+    highlight: (str, language) => highlight(str, { language }).value }
 
-const render = (markdown, props) =>
-  update(md(
-    { innerHTML: markdownit(
-      { html: true,
-        linkify: true,
-        typographer: true,
-        highlight: (str, language) =>
-          highlight(str, { language }).value })
-    .render(markdown),
-      ...props }))
+const md = (markdown = '', props = {}) =>
+  createElement('md', { innerHTML: markdownit(config).render(markdown),
+                        ...props })
 
 export default (markdown, props) =>
   (fetch(markdown).then(response => response.text())
-                  .then(markdown => render(markdown, props)),
-  md(props, markdown))
+                  .then(markdown => update(md(markdown, props)))
+                  .catch(markdown => update(md(markdown, props))),
+  md('', props))
 
