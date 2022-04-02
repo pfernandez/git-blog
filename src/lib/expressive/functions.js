@@ -8,6 +8,8 @@ export const last = array => first(slice(array, -1))
 
 export const log = (...values) => (console.log(...values), last(values))
 
+export const error = string => { throw new Error(string) }
+
 export const length = array => array.length
 
 export const bool = value => !!value
@@ -34,6 +36,8 @@ export const isInstance = (value, type) => value instanceof type
 export const isFunction = value => type(value, 'function')
 
 export const { isArray } = Array
+
+export const isString = value => typeof value === 'string'
 
 export const isObject = value =>
   and(type(value, 'object'), not(eq(value, null)))

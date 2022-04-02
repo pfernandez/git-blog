@@ -1,8 +1,3 @@
-<script>
-  import counter from '../components/counter.js'
-  import md from '../components/markdown.js'
-</script>
-
 # Live Elements
 
 ## Just write the UI already
@@ -39,34 +34,31 @@ html(
 We can create custom elements called _components_, analagous to React
 components. But instead of introducing the concept of
 [component state](https://reactjs.org/docs/state-and-lifecycle.html) to
-indicate that an element should be reloaded, we call it directly with new
+indicate that an element should be reloaded, we update it directly with new
 arguments.
 
-```js
-const counter = count =>
-  div(pre(count),
-      button({ onclick: () => counter(count + 1) },
+```live-js
+const counter = (id, count) =>
+  div({ id },
+      pre(count),
+      button({ onclick: () => update(counter(id, count + 1)) },
              'Increment'))
 ```
 
 Here it is in action:
 
-<script id='s1'>
-// The script element appears but isn't evaluated. Could iterate through and
-// `eval` all of them, but markdownit may be able to do it.
-// https://stackoverflow.com/a/22745553/2303148
-// const el = figure(h3('Recursive Counter'), counter('counter-1', 0))
-// document.getElementbyID('s1').after(el)
-console.log('TODO: Inline scripts') // nothing
+<script>
+  document.currentScript.after(
+    figure(h3('A Simple Counter'), counter('c1', 0)))
 </script>
 
 After loading the app with initial arguments, we might want to render it again
 with data fetched or computed asychronously. Let's replace the start count
-again, this time with an API response that returns \`{ count: 1 }\`.
+again, this time with an API response that returns `{ count: 1 }`.
 
 ```js
 fetch('/data').then(response => response.json())
-              .then(({ count }) => update(counter(count)))
+              .then(({ count }) => update(counter('c2', count)))
 ```
 
 The counter now begins at the value \`1\` that was stored on the
@@ -74,17 +66,13 @@ server.
 
 <script>
   document.currentScript.after(
-    figure(
-      h3('Recursive Counter'),
-      counter('counter-2', 0)))
-</script>
+    figure(h3('Async Counter Update'), counter('c2', 0)))
 
-<script>
   fetch('/data').then(response => response.json())
-                .then(({ count }) => counter('counter-2', count))
+                .then(({ count }) => update(counter('c2', count)))
 </script>
 
-**So state really only needs to exist in three places:**
+**So: On the client, state really only needs to exist in three places:**
 
 1. In the state rendered on the screen at any given moment.
 2. In persistent storage such as a database server.
