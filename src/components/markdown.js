@@ -19,21 +19,34 @@ const md = (markdown = '', props = {}) =>
   createElement('md', { innerHTML: markdownit(config).render(markdown),
                         ...props })
 
-// TODO: Avoid redeclaration errors by not running this after navigating back
-// to the same page. Maybe add a class to the `md` element?
+// If the markdown contains a script tag or live-js block that includes a `let`
+// or `const`, a rerender will cause a variable redeclaration error when the
+// script is injected a second time. But if it isn't injected again, none of its
+// effects on the DOM will occur. Hence this hack to replace them with `var`s,
+// which can be redeclared.
+//
+// TODO: These vars could easily overwrite something in the global scope.
+// Add them to an object as properties instead. It should work to declare it as
+// a constant inside this module.
+//
+// Picking them out reliably is challenging (though not impossible) using string
+// subsitution, so consider using an AST.
+const redeclarable = js => script(js.replace(/\bconst\b|\blet\b/g, 'var'))
+
 const injectScripts = el =>
   el.querySelectorAll('script, .language-live-js')
-    .forEach(s => s.after(script({ className: 'injected' }, s.innerText)))
+    .forEach(s => s.tagName === script
+      ? s.replaceWith(redeclarable(s.innerText))
+      : s.after(redeclarable(s.innerText)))
 
 const injectMarkdown = el => (update(el), injectScripts(el))
 
-const renderString = markdown => update(md(markdown, props))
-
-export default (markdown, props) =>
+const renderMarkdown = (markdown, props) =>
   (fetch(markdown).then(response => response.text())
       .then(markdown => injectMarkdown(md(markdown, props)))
       .catch(result => isString(result)
-        ? renderString(result)
+        ? update(md(markdown, props))
         : console.error(result)),
   md('', props))
 
+export default (markdown, props) => renderMarkdown(markdown, props)

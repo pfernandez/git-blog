@@ -3,11 +3,10 @@
 ## Just write the UI already
 
 JavaScript frameworks are needlessly complex. There are a lot of reasons for
-this, but the biggest culprit is **state**. Some state, such as the text and
-and container elements that comprise the "state" of this web page, is
-desirable, but otherwise it's best to avoid it wherever possible. _Live
-Elements_ are designed to let you simply write what should
-appear on the screen.
+this, but the biggest culprit is **state**. Some state, such as the text and and
+container elements that comprise the "state" of this web page, is desirable, but
+otherwise it's best to avoid it wherever possible. _Live Elements_ are designed
+to let you simply write what should appear on the screen.
 
 ## Simply Declarative
 
@@ -32,10 +31,9 @@ html(
 ## Stateless Components
 
 We can create custom elements called _components_, analagous to React
-components. But instead of introducing the concept of
-[component state](https://reactjs.org/docs/state-and-lifecycle.html) to
-indicate that an element should be reloaded, we update it directly with new
-arguments.
+components. But instead of introducing the concept of [component
+state](https://reactjs.org/docs/state-and-lifecycle.html) to indicate that an
+element should be reloaded, we update it directly with new arguments.
 
 ```live-js
 const counter = (id, count) =>
@@ -61,8 +59,7 @@ fetch('/data').then(response => response.json())
               .then(({ count }) => update(counter('c2', count)))
 ```
 
-The counter now begins at the value \`1\` that was stored on the
-server.
+The counter now begins at the value `1` that was stored on the server.
 
 <script>
   document.currentScript.after(
@@ -82,6 +79,5 @@ server.
    function input types when used with a type checker such as
    [tsserver](https://github.com/Microsoft/TypeScript/wiki/Standalone-Server-%28tsserver%29).
 
-Our app itelf remains effectively stateless, consisting of only pure
-functions.
+Our app itelf remains effectively stateless, consisting of only pure functions.
 

@@ -1,11 +1,11 @@
 
 const assignProperties = (element, properties) =>
   Object.entries(properties).reduce(
-    (el, [k, v]) =>
-      (el[k] = v,
+    (el, [k, v]) => {
+      try { el[k] = v } catch {}
       typeof v === 'object' && !Array.isArray(v)
-      && assignProperties(el[k], v),
-      el),
+        && assignProperties(el[k], v)
+      return el },
     element)
 
 const attachSubtree = ({ element, properties, childNodes }) =>
@@ -62,8 +62,8 @@ const tagNames = [
 const defaultElements = tagNames.reduce(
   (functions, tagName) =>
     ({ ...functions,
-       [tagName]: (nodeOrProperties, ...nodes) =>
-         createElement(tagName, nodeOrProperties, ...nodes) }),
+       [tagName]: (childOrProperties, ...childNodes) =>
+         createElement(tagName, childOrProperties, ...childNodes) }),
   { fragment:
     (...childNodes) =>
       appendChildren(document.createDocumentFragment(), ...childNodes) })
