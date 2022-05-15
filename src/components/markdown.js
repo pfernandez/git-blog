@@ -19,27 +19,37 @@ const md = (markdown = '', props = {}) =>
   createElement('md', { innerHTML: markdownit(config).render(markdown),
                         ...props })
 
-// If the markdown contains a script tag or live-js block that includes a `let`
-// or `const`, a rerender will cause a variable redeclaration error when the
-// script is injected a second time. But if it isn't injected again, none of its
-// effects on the DOM will occur. Hence this hack to replace them with `var`s,
-// which can be redeclared.
-//
-// TODO: These vars could easily overwrite something in the global scope.
-// Add them to an object as properties instead. It should work to declare it as
-// a constant inside this module.
-//
-// Picking them out reliably is challenging (though not impossible) using string
-// subsitution, so consider using an AST.
-const redeclarable = js => script(js.replace(/\bconst\b|\blet\b/g, 'var'))
+const varObj = 'MD_' + btoa(Math.random().toString()).substr(10, 5);
+
+// TODO: Optional repeating comma-separated declarations.
+// Something like (?:\s+?=.*,\s+?(\w+))*?
+const regex = /\b(?:const|let)\b\s+(\w+)/g
+
+const varNames = []
+
+const replaceUsages = (js, matches) =>
+  (// Replace "const foo" with "foo"
+   [...js.matchAll(regex)].forEach(array =>
+      (js = js.replace(new RegExp(`\\b${array[0]}\\b`, 'g'), array[1]),
+       varNames.push(array[1]))),
+   // Replace "foo" with "MD_XWIBIb.foo"
+   varNames.forEach(name =>
+     js = js.replace(new RegExp(`\\b${name}\\b`, 'g'), `${varObj}.${name}`)),
+   js)
+
+const redeclarable = js => script(replaceUsages(js))
+
+const injectVarContainer = () =>
+  document.body.prepend(script(`const ${varObj} = {}`))
 
 const injectScripts = el =>
   el.querySelectorAll('script, .language-live-js')
-    .forEach(s => s.tagName === script
+    .forEach(s => s.tagName.toLowerCase() === 'script'
       ? s.replaceWith(redeclarable(s.innerText))
       : s.after(redeclarable(s.innerText)))
 
-const injectMarkdown = el => (update(el), injectScripts(el))
+const injectMarkdown = el =>
+  (update(el), injectVarContainer(), injectScripts(el))
 
 const renderMarkdown = (markdown, props) =>
   (fetch(markdown).then(response => response.text())

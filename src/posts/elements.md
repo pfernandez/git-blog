@@ -41,6 +41,7 @@ const counter = (id, count) =>
       pre(count),
       button({ onclick: () => update(counter(id, count + 1)) },
              'Increment'))
+             const asdf ='qwerty'; let foo = 123, bar = 456
 ```
 
 Here it is in action:
