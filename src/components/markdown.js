@@ -21,21 +21,18 @@ const md = (markdown = '', props = {}) =>
 
 const varObj = 'MD_' + btoa(Math.random().toString()).substr(10, 5);
 
-// TODO: Optional repeating comma-separated declarations.
-// Something like (?:\s+?=.*,\s+?(\w+))*?
+// TODO: This misses repeating comma-separated declarations. Consider an AST.
 const regex = /\b(?:const|let)\b\s+(\w+)/g
 
 const varNames = []
 
-const replaceUsages = (js, matches) =>
-  (// Replace "const foo" with "foo"
-   [...js.matchAll(regex)].forEach(array =>
-      (js = js.replace(new RegExp(`\\b${array[0]}\\b`, 'g'), array[1]),
-       varNames.push(array[1]))),
-   // Replace "foo" with "MD_XWIBIb.foo"
-   varNames.forEach(name =>
-     js = js.replace(new RegExp(`\\b${name}\\b`, 'g'), `${varObj}.${name}`)),
-   js)
+const replaceUsages = js =>
+  ([...js.matchAll(regex)].forEach(matches =>
+    matches.forEach(match =>
+      js.replace(
+        new RegExp(`\\b${match}\\b`, 'g'),
+        `${varObj}.${matches[1]}`))),
+    js)
 
 const redeclarable = js => script(replaceUsages(js))
 
