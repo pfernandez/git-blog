@@ -3,7 +3,7 @@
 ## Just write the UI already
 
 JavaScript frameworks are needlessly complex. There are a lot of reasons for
-this, but the biggest culprit is **state**. Some state, such as the text and and
+this, but the biggest culprit is **state**. Some state, such as the text and
 container elements that comprise the "state" of this web page, is desirable, but
 otherwise it's best to avoid it wherever possible. _Live Elements_ are designed
 to let you simply write what should appear on the screen.
@@ -41,7 +41,6 @@ const counter = (id, count) =>
       pre(count),
       button({ onclick: () => update(counter(id, count + 1)) },
              'Increment'))
-             const asdf ='qwerty'; let foo = 123, bar = 456
 ```
 
 Here it is in action:

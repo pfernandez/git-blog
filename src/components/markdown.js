@@ -19,34 +19,22 @@ const md = (markdown = '', props = {}) =>
   createElement('md', { innerHTML: markdownit(config).render(markdown),
                         ...props })
 
-const varObj = 'MD_' + btoa(Math.random().toString()).substr(10, 5);
-
-// TODO: This misses repeating comma-separated declarations. Consider an AST.
-const regex = /\b(?:const|let)\b\s+(\w+)/g
-
-const varNames = []
-
-const replaceUsages = js =>
-  ([...js.matchAll(regex)].forEach(matches =>
-    matches.forEach(match =>
-      js.replace(
-        new RegExp(`\\b${match}\\b`, 'g'),
-        `${varObj}.${matches[1]}`))),
-    js)
-
-const redeclarable = js => script(replaceUsages(js))
-
-const injectVarContainer = () =>
-  document.body.prepend(script(`const ${varObj} = {}`))
-
+// Because inline scripts have already been run, rerendering them (i.e. when
+// navigating away from, then back to content without a page refresh) will cause
+// redecalaration errors for any `const` or `let` statements. To work around
+// this we suppress during all script injections after the initial load.
+let loaded = false
+const temp = window.onerror
 const injectScripts = el =>
-  el.querySelectorAll('script, .language-live-js')
-    .forEach(s => s.tagName.toLowerCase() === 'script'
-      ? s.replaceWith(redeclarable(s.innerText))
-      : s.after(redeclarable(s.innerText)))
+  (window.onerror = () => loaded,
+   el.querySelectorAll('script, .language-live-js')
+     .forEach(s => s.tagName.toLowerCase() === 'script'
+       ? s.replaceWith(script(s.innerText))
+       : s.after(script(s.innerText))),
+   window.onerror = temp,
+   loaded = true)
 
-const injectMarkdown = el =>
-  (update(el), injectVarContainer(), injectScripts(el))
+const injectMarkdown = el => (update(el), injectScripts(el))
 
 const renderMarkdown = (markdown, props) =>
   (fetch(markdown).then(response => response.text())

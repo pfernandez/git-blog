@@ -95,7 +95,7 @@ pre {
   border-bottom: var(--border);
   margin: 30px -23px;
   padding: 23px;
-  overflow: scroll;
+  overflow: auto;
 }
 
 figure {
