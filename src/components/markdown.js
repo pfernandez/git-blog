@@ -36,19 +36,19 @@ const replaceScripts = el =>
 
 const injectScripts = el =>
   (window.onerror = () => loaded,
-   replaceScripts(),
-   window.onerror = temp,
-   loaded = true)
+  replaceScripts(el),
+  window.onerror = temp,
+  loaded = true)
 
 const injectMarkdown = el =>
   (update(el), injectScripts(el))
 
 const renderMarkdown = (markdown, props) =>
   (fetch(markdown).then(response => response.text())
-      .then(markdown => injectMarkdown(md(markdown, props)))
-      .catch(result => isString(result)
-        ? update(md(markdown, props))
-        : console.error(result)),
+    .then(markdown => injectMarkdown(md(markdown, props)))
+    .catch(result => isString(result)
+      ? update(md(markdown, props))
+      : console.error(result)),
   md('', props))
 
 export default (markdown, props) => renderMarkdown(markdown, props)
