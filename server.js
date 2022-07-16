@@ -18,4 +18,4 @@ express()
   `))
   .listen(port, () => console.log(`Running at http://localhost:${port}`))
 
-createServer().watch(path)
+createServer({ exts: ['js', 'md', 'css'] }).watch(path)

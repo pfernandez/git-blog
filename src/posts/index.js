@@ -1,7 +1,8 @@
-import home from './home.js'
-import elements from './elements.js'
+export default
 
-const posts = { '/': home,
-                '/elements': elements }
+{ '/': { filename: '/posts/home.md',
+         label: 'Home' },
 
-export default posts
+  '/elements': { filename: '/posts/elements.md',
+                 label: 'Live Elements' } }
+

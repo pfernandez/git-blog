@@ -79,7 +79,6 @@ header h1 {
 }
 
 header h2 {
-  color: rgb(0 0 0 / 70%);
   font-size: 0.9em;
   font-weight: 300;
   margin-top: 15px;
@@ -96,7 +95,7 @@ pre {
   border-bottom: var(--border);
   margin: 30px -23px;
   padding: 23px;
-  overflow: scroll;
+  overflow: auto;
 }
 
 figure {
@@ -160,3 +159,11 @@ nav button {
   }
 }
 
+/* needs work
+@media (prefers-color-scheme: dark) {
+  html {
+    background: #181818;
+    color: snow;
+  }
+}
+*/

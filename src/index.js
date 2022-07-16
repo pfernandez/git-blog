@@ -1,6 +1,7 @@
 import './lib/expressive/global.js'
+import posts from '../posts/index.js'
 import post from './components/post.js'
-import navigation from './components/navigation.js'
+import sidebar from './components/sidebar.js'
 
 html(
   head(
@@ -14,6 +15,5 @@ html(
       hgroup(
         h1('Expressive JS'),
         h2('An Experiment in Functional JavaScript'))),
-    main(post(location.pathname)),
-    navigation()))
-
+    nav(sidebar(posts)),
+    main(post(pathname))))

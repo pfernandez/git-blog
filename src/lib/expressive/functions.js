@@ -8,6 +8,8 @@ export const last = array => first(slice(array, -1))
 
 export const log = (...values) => (console.log(...values), last(values))
 
+export const error = string => { throw new Error(string) }
+
 export const length = array => array.length
 
 export const bool = value => !!value
@@ -34,6 +36,8 @@ export const isInstance = (value, type) => value instanceof type
 export const isFunction = value => type(value, 'function')
 
 export const { isArray } = Array
+
+export const isString = value => typeof value === 'string'
 
 export const isObject = value =>
   and(type(value, 'object'), not(eq(value, null)))
@@ -81,6 +85,8 @@ export const partial = (fn, ...values) => fn.bind(null, ...values)
 
 export const reverse = array => [...array].reverse()
 
+export const flat = (array, depth) => array.flat(depth)
+
 export const sum = (...values) => values.reduce((x, y) => x + y)
 
 export const walk = (root, f) => each(f(root), node => walk(node, f))
@@ -88,7 +94,7 @@ export const walk = (root, f) => each(f(root), node => walk(node, f))
 export const globalize = object =>
   each(entries(object),
     /* global global, window */
-    ([k, v]) => window ? window[k] = v : global[k] = v)
+       ([k, v]) => window ? window[k] = v : global[k] = v)
 
 /**
  * Recursively evaluates an array expression.
@@ -115,9 +121,9 @@ export const globalize = object =>
  */
 export const evaluate = ([fn, ...rest]) =>
   apply(fn,
-    map(rest, value =>
-      !(isArray(value) && isFunction(first(value)))
-        ? value : evaluate(value)))
+        map(rest, value =>
+          !(isArray(value) && isFunction(first(value)))
+            ? value : evaluate(value)))
 
 // TODO: Keep necessary spaces and combine regexes.
 export const parseLisp = string =>

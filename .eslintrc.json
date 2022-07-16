@@ -13,19 +13,18 @@
     "indent": [ "warn", 2, {
         "CallExpression": { "arguments": "first" },
         "ImportDeclaration": "first",
+        "MemberExpression": "off",
         "ObjectExpression": "first",
-        "VariableDeclarator": {
-          "var": 2,
-          "let": 2,
-          "const": 3 } } ],
+        "VariableDeclarator": { "var": 2, "let": 2, "const": 3 } } ],
     "key-spacing": [ "warn", { "mode": "minimum" } ],
     "linebreak-style": [ "error", "unix" ],
     "no-extra-parens": "warn",
+    "no-global-assign": "warn",
     "no-multiple-empty-lines": [ "warn", { "max": 2, "maxEOF": 1 } ],
     "no-multi-spaces": [ "warn", {
-        "ignoreEOLComments": true,
-        "exceptions": { "Property": false } } ],
-        "no-trailing-spaces": "warn",
+        "ignoreEOLComments": true, "exceptions": { "Property": false } } ],
+    "no-trailing-spaces": "warn",
+    "no-redeclare": "warn",
     "no-undef": "warn",
     "no-unused-vars": [ "warn", {
         "args": "all",
@@ -36,7 +35,6 @@
         "overrides": {
           "=": "ignore" } } ],
     "prefer-rest-params": "warn",
-    "quote-props": [ "warn", "as-needed" ],
     "quotes": [ "warn", "single" ],
     "semi": [ "warn", "never" ],
     "sort-imports": "warn",
@@ -49,6 +47,8 @@
     "space-infix-ops": "warn" },
 
   "globals": {
+    "markdownit": "readonly",
+
     "apply": "readonly",
     "bool": "readonly",
     "deepMap": "readonly",
@@ -59,6 +59,7 @@
     "exists": "readonly",
     "filter": "readonly",
     "first": "readonly",
+    "flat": "readonly",
     "globalize": "readonly",
     "identity": "readonly",
     "instance": "readonly",
@@ -81,6 +82,10 @@
     "sum": "readonly",
     "type": "readonly",
     "walk": "readonly",
+
+    "on": "readonly",
+    "navigateTo": "readonly",
+    "pathname": "readonly",
 
     "a": "readonly",
     "abbr": "readonly",
