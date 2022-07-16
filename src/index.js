@@ -1,5 +1,5 @@
 import './lib/expressive/global.js'
-import posts from '../posts/index.js'
+import posts from './posts/index.js'
 import post from './components/post.js'
 import sidebar from './components/sidebar.js'
 
