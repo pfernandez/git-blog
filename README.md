@@ -1,3 +1,3 @@
 # git-blog
 
-WIP
+[WIP](https://pfernandez.github.io/git-blog/)
