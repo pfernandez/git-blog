@@ -1,22 +1,22 @@
 import hljs from '../lib/highlight/es/core.min.js'
 import javascript from '../lib/highlight/es/languages/javascript.min.js'
 
-const { registerLanguage, highlight } = hljs
+const {registerLanguage, highlight} = hljs
 
 registerLanguage('javascript', javascript)
 
 const parseCodeBlock = (str, language) =>
   language === 'live-js'
-    ? highlight(str, { language: 'javascript' }).value
-    : highlight(str, { language }).value
+    ? highlight(str, {language: 'javascript'}).value
+    : highlight(str, {language}).value
 
-const config = { html: true,
-                 linkify: true,
-                 highlight: parseCodeBlock }
+const config = {html: true,
+                linkify: true,
+                highlight: parseCodeBlock}
 
 const md = (markdown = '', props = {}) =>
-  createElement('md', { innerHTML: markdownit(config).render(markdown),
-                        ...props })
+  createElement('md', {innerHTML: markdownit(config).render(markdown),
+                       ...props})
 
 /**
  * Because inline scripts have already been run, rerendering them (i.e. when
