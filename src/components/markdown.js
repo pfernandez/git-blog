@@ -1,5 +1,6 @@
 import hljs from '../lib/highlight/es/core.min.js'
 import javascript from '../lib/highlight/es/languages/javascript.min.js'
+import markdownit from 'markdown-it'
 
 const {registerLanguage, highlight} = hljs
 
@@ -45,10 +46,10 @@ const injectMarkdown = el =>
 
 const renderMarkdown = (markdown, props) =>
   (fetch(markdown).then(response => response.text())
-    .then(markdown => injectMarkdown(md(markdown, props)))
-    .catch(result => isString(result)
-      ? update(md(markdown, props))
-      : console.error(result)),
+                  .then(markdown => injectMarkdown(md(markdown, props)))
+                  .catch(result => isString(result)
+                    ? update(md(markdown, props))
+                    : console.error(result)),
   md('', props))
 
 export default (markdown, props) => renderMarkdown(markdown, props)

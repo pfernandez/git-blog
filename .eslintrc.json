@@ -48,8 +48,7 @@
           "space-in-parens": "warn",
           "space-infix-ops": "warn"},
 
- "globals": {"markdownit": "readonly",
-           "apply": "readonly",
+ "globals": {"apply": "readonly",
            "bool": "readonly",
            "deepMap": "readonly",
            "each": "readonly",

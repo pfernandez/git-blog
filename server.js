@@ -1,20 +1,13 @@
-import {createServer} from 'livereload'
-import express from 'express'
+const {createServer} = require('livereload')
+const express = require('express')
 
-const main = 'index.js',
-      path = 'src',
-      port = 3000
+const port = 3000
 
 express()
-  .use(express.static(path), express.static('node_modules'))
-  .get('/data', (_, res) => res.send({count: 1}))
-  .get('*', (_, res) =>
-    res.send(`<!doctype html>
-              <link rel="icon" href="data:x-icon">
-              <script type="text/javascript"
-                      src="markdown-it/dist/markdown-it.min.js"></script>
-              <script src="//localhost:35729/livereload.js"></script>
-              <script type="module" src="${main}"></script>`))
+  .use(express.static(__dirname + '/dist'),
+       // TODO: Serve the posts from elsewhere?
+       express.static(__dirname + '/src'))
+  .get('*', (_, res) => res.sendFile(__dirname + '/index.html'))
   .listen(port, () => console.log(`Running at http://localhost:${port}`))
 
-createServer({exts: ['js', 'md', 'css']}).watch(path)
+createServer({exts: ['js', 'md', 'css']}).watch('src')

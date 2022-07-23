@@ -8,21 +8,23 @@ const assignProperties = (element, properties) =>
       return el },
     element)
 
-const attachSubtree = ({ element, properties, childNodes }) =>
+const attachSubtree = ({element, properties, childNodes}) =>
   (childNodes.length && element.replaceChildren(...childNodes),
   assignProperties(element, properties))
 
 const baseElement = tagName =>
   'html' === tagName ? document.documentElement
-    : ['head', 'body'].includes(tagName) ? document[tagName]
-      : 'imgmap' === tagName ? document.createElement('map')
+    : ['head', 'body'].includes(tagName) && document[tagName]
+      ? document[tagName]
+      : 'imgmap' === tagName
+        ? document.createElement('map')
         : document.createElement(tagName)
 
 const prepare = (tagName, x, childNodes) =>
-  ({ element: baseElement(tagName),
-     ...typeof x === 'object' && !(Array.isArray(x) || x instanceof Node)
-       ? { childNodes: childNodes.flat(), properties: x }
-       : { childNodes: [x, ...childNodes].flat(), properties: {} } })
+  ({element: baseElement(tagName),
+    ...typeof x === 'object' && !(Array.isArray(x) || x instanceof Node)
+      ? {childNodes: childNodes.flat(), properties: x}
+      : {childNodes: [x, ...childNodes].flat(), properties: {}}})
 
 /**
  * Generates an HTMLElement with children and inserts it into the DOM.
@@ -43,47 +45,44 @@ export const createElement = (tagName, nodeOrProperties, ...nodes) =>
 const appendChildren = (element, ...children) =>
   (element.append(...children), element)
 
-const tagNames = [
-  'a', 'abbr', 'address', 'area', 'article', 'aside', 'audio', 'b', 'base',
-  'bdi', 'bdo', 'blockquote', 'body', 'br', 'button', 'canvas', 'caption',
-  'cite', 'code', 'col', 'colgroup', 'data', 'datalist', 'dd', 'del', 'details',
-  'dfn', 'dialog', 'div', 'dl', 'dt', 'em', 'embed', 'fieldset', 'figcaption',
-  'figure', 'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'head',
-  'header', 'hgroup', 'hr', 'html', 'i', 'iframe', 'img', 'input', 'ins', 'kbd',
-  'label', 'legend', 'li', 'link', 'main', 'map', 'mark', 'menu', 'meta',
-  'meter', 'nav', 'noscript', 'object', 'ol', 'optgroup', 'option', 'output',
-  'p', 'param', 'picture', 'pre', 'progress', 'q', 'rp', 'rt', 'ruby', 's',
-  'samp', 'script', 'section', 'select', 'slot', 'small', 'source', 'span',
-  'strong', 'style', 'sub', 'summary', 'sup', 'table', 'tbody', 'td',
-  'template', 'textarea', 'tfoot', 'th', 'thead', 'time', 'title', 'tr',
-  'track', 'u', 'ul', 'var', 'video', 'wbr'
-]
+const tagNames =
+  ['a', 'abbr', 'address', 'area', 'article', 'aside', 'audio', 'b', 'base',
+   'bdi', 'bdo', 'blockquote', 'body', 'br', 'button', 'canvas', 'caption',
+   'cite', 'code', 'col', 'colgroup', 'data', 'datalist', 'dd', 'del',
+   'details', 'dfn', 'dialog', 'div', 'dl', 'dt', 'em', 'embed', 'fieldset',
+   'figcaption', 'figure', 'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+   'head', 'header', 'hgroup', 'hr', 'html', 'i', 'iframe', 'img', 'input',
+   'ins', 'kbd', 'label', 'legend', 'li', 'link', 'main', 'map', 'mark', 'menu',
+   'meta', 'meter', 'nav', 'noscript', 'object', 'ol', 'optgroup', 'option',
+   'output', 'p', 'param', 'picture', 'pre', 'progress', 'q', 'rp', 'rt',
+   'ruby', 's', 'samp', 'script', 'section', 'select', 'slot', 'small',
+   'source', 'span', 'strong', 'style', 'sub', 'summary', 'sup', 'table',
+   'tbody', 'td', 'template', 'textarea', 'tfoot', 'th', 'thead', 'time',
+   'title', 'tr', 'track', 'u', 'ul', 'var', 'video', 'wbr']
 
 const defaultElements = tagNames.reduce(
   (functions, tagName) =>
-    ({ ...functions,
-       [tagName]: (childOrProperties, ...childNodes) =>
-         createElement(tagName, childOrProperties, ...childNodes) }),
-  { fragment:
+    ({...functions,
+      [tagName]: (childOrProperties, ...childNodes) =>
+        createElement(tagName, childOrProperties, ...childNodes)}),
+  {fragment:
     (...childNodes) =>
-      appendChildren(document.createDocumentFragment(), ...childNodes) })
+      appendChildren(document.createDocumentFragment(), ...childNodes)})
 
-export const {
-  fragment, imgmap,
-  a, abbr, address, area, article, aside, audio, b, base,
-  bdi, bdo, blockquote, body, br, button, canvas, caption,
-  cite, code, col, colgroup, data, datalist, dd, del, details,
-  dfn, dialog, div, dl, dt, em, embed, fieldset, figcaption,
-  figure, footer, form, h1, h2, h3, h4, h5, h6, head,
-  header, hgroup, hr, html, i, iframe, img, input, ins, kbd,
-  label, legend, li, link, main, mark, menu, meta,
-  meter, nav, noscript, object, ol, optgroup, option, output,
-  p, param, picture, pre, progress, q, rp, rt, ruby, s,
-  samp, script, section, select, slot, small, source, span,
-  strong, style, sub, summary, sup, table, tbody, td,
-  template, textarea, tfoot, th, thead, time, title, tr,
-  track, u, ul, video, wbr
-} = defaultElements
+export const {fragment, imgmap,
+              a, abbr, address, area, article, aside, audio, b, base,
+              bdi, bdo, blockquote, body, br, button, canvas, caption,
+              cite, code, col, colgroup, data, datalist, dd, del, details,
+              dfn, dialog, div, dl, dt, em, embed, fieldset, figcaption,
+              figure, footer, form, h1, h2, h3, h4, h5, h6, head,
+              header, hgroup, hr, html, i, iframe, img, input, ins, kbd,
+              label, legend, li, link, main, mark, menu, meta,
+              meter, nav, noscript, object, ol, optgroup, option, output,
+              p, param, picture, pre, progress, q, rp, rt, ruby, s,
+              samp, script, section, select, slot, small, source, span,
+              strong, style, sub, summary, sup, table, tbody, td,
+              template, textarea, tfoot, th, thead, time, title, tr,
+              track, u, ul, video, wbr} = defaultElements
 
 const selector = el =>
   el.tagName

@@ -5,10 +5,10 @@ import sidebar from './components/sidebar.js'
 
 html(
   head(
-    title('Expressive'),
+    title('git-blog'),
     meta({name: 'viewport', content: 'width=device-width, initial-scale=1'}),
     link({rel: 'icon', href: 'img/favicon.ico'}),
-    link({rel: 'stylesheet', href: 'style.css'}),
+    link({rel: 'stylesheet', href: '/style.css'}),
     link({rel: 'stylesheet', href: 'lib/highlight/styles/github.min.css'})),
   body(
     header(
