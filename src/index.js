@@ -1,11 +1,11 @@
-import './lib/expressive/global.js'
-import posts from '../posts/index.js'
-import post from './components/post.js'
-import sidebar from './components/sidebar.js'
+import '/lib/expressive/global.js'
+import posts from '/posts/index.js'
+import post from '/components/post.js'
+import sidebar from '/components/sidebar.js'
 
 html(
   head(
-    title('Expressive'),
+    title('git-blog'),
     meta({name: 'viewport', content: 'width=device-width, initial-scale=1'}),
     link({rel: 'icon', href: 'img/favicon.ico'}),
     link({rel: 'stylesheet', href: 'style.css'}),

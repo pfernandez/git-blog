@@ -1,7 +1,8 @@
-import hljs from '../lib/highlight/es/core.min.js'
-import javascript from '../lib/highlight/es/languages/javascript.min.js'
+import hljs from '/lib/highlight/es/core.min.js'
+import javascript from '/lib/highlight/es/languages/javascript.min.js'
 
 const {registerLanguage, highlight} = hljs
+const {markdownit} = window
 
 registerLanguage('javascript', javascript)
 

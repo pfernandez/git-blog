@@ -4,7 +4,7 @@
     "url": "https://github.com/pfernandez/git-blog/issues"
   },
   "description": "WIP",
-  "homepage": "https://github.com/pfernandez/git-blog#readme",
+  "homepage": "https://pfernandez.github.io/git-blog",
   "keywords": [
     "blog",
     "github",
@@ -17,16 +17,13 @@
   "name": "git-blog",
   "type": "module",
   "version": "0.0.1",
-  "dependencies": {
-    "markdown-it": "^12.3.2"
-  },
   "devDependencies": {
-    "eslint": "^7.32.0",
+    "eslint": "^8.20.0",
     "express": "^4.18.1",
     "livereload": "^0.9.3",
     "nodemon": "^2.0.19"
   },
   "scripts": {
-    "start": "npx nodemon --ignore src"
+    "start": "npx nodemon --ignore src --ext html,js,json"
   }
 }

@@ -35,7 +35,7 @@ export const isInstance = (value, type) => value instanceof type
 
 export const isFunction = value => type(value, 'function')
 
-export const { isArray } = Array
+export const {isArray} = Array
 
 export const isString = value => typeof value === 'string'
 
@@ -47,7 +47,7 @@ export const isEmpty = value =>
     ? !length(isArray(value) ? value : keys(value))
     : bool(value)
 
-export const { keys, entries } = Object
+export const {keys, entries} = Object
 
 export const some = (array, fn) => array.some(fn)
 
@@ -55,7 +55,7 @@ export const every = (...values) => values.every(v => v)
 
 export const find = (array, fn) => array.find(fn)
 
-export const omit = (object, key) => (({ [key]: _, ...o }) => o)(object)
+export const omit = (object, key) => (({[key]: _, ...o}) => o)(object)
 
 export const each = (array, fn) => array.forEach(fn)
 
@@ -64,7 +64,7 @@ export const reduce = (array, fn, value) => array.reduce(fn, value)
 export const map = (array, fn) => array.map(fn)
 
 export const omap = (object, fn) =>
-  reduce(entries(object), (o, [k, v]) => ({ ...o, [k]: fn(v) }), {})
+  reduce(entries(object), (o, [k, v]) => ({...o, [k]: fn(v)}), {})
 
 export const deepMap = (value, fn) =>
   isArray(value) ? map(value, v => deepMap(v, fn))
