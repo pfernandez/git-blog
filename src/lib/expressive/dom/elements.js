@@ -1,4 +1,3 @@
-
 const assignProperties = (element, properties) =>
   Object.entries(properties).reduce(
     (el, [k, v]) => {
@@ -102,4 +101,9 @@ const selector = el =>
 export const update = element =>
   [...document.querySelectorAll(selector(element))].map(
     el => (el.replaceWith(element), el))
+
+// TODO: The problem with using an `id` to reference another element is that it
+// requires a text search to find it later rather than leveraging the AST. We're
+// back to 2010. What about relying on importing it instead and removing the
+// ability to use anything else?
 
