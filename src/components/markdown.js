@@ -1,6 +1,5 @@
 import hljs from '../lib/highlight/es/core.min.js'
 import javascript from '../lib/highlight/es/languages/javascript.min.js'
-import markdownit from 'markdown-it'
 
 const {registerLanguage, highlight} = hljs
 

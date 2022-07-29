@@ -50,30 +50,10 @@ Here it is in action:
     figure(h3('A Simple Counter'), counter('c1', 0)))
 </script>
 
-After loading the app with initial arguments, we might want to render it again
-with data fetched or computed asychronously. Let's replace the start count
-again, this time with an API response that returns `{ count: 1 }`.
-
-```js
-fetch('/data').then(response => response.json())
-              .then(({ count }) => update(counter('c2', count)))
-```
-
-The counter now begins at the value `1` that was stored on the server.
-
-<script>
-  document.currentScript.after(
-    figure(h3('Async Counter Update'), counter('c2', 0)))
-
-  fetch('/data').then(response => response.json())
-                .then(({ count }) => update(counter('c2', count)))
-</script>
-
 **So: On the client, state really only needs to exist in three places:**
 
 1. In the state rendered on the screen at any given moment.
-2. In persistent storage such as a database server.
-3. In the code itself as default function arguments. While not stricly
+2. In the code itself as default function arguments. While not stricly
    necessary, these initial values are useful to provide default values while
    waiting for asynchronously fetched data, for unit testing, and to infer
    function input types when used with a type checker such as
