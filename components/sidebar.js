@@ -1,4 +1,4 @@
-import post from '/components/post.js'
+import post from './post.js'
 
 on('popstate', () => update(post(pathname)))
 

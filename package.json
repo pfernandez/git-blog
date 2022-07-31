@@ -13,7 +13,6 @@
     "simple"
   ],
   "license": "ISC",
-  "main": "server.js",
   "name": "git-blog",
   "type": "module",
   "version": "0.0.1",
@@ -23,7 +22,11 @@
     "livereload": "^0.9.3",
     "nodemon": "^2.0.19"
   },
+  "nodemonConfig": {
+    "ext": "html,js,json",
+    "ignore": ["index.js", "components/", "posts/", "lib/"]
+  },
   "scripts": {
-    "start": "npx nodemon --ignore src --ext html,js,json"
+    "start": "npx nodemon server.js"
   }
 }
