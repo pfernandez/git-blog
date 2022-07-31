@@ -1,5 +1,4 @@
-export default {'/': {filename: '/posts/home.md',
-                      label: 'Home'},
-
-                '/elements': {filename: '/posts/elements.md',
-                              label: 'Live Elements'}}
+export default {'home.md': {path: '/',
+                            title: 'Home'},
+                'elements.md': {path: '/elements',
+                                title: 'Live Elements'}}
