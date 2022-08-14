@@ -1,8 +1,12 @@
-<!DOCTYPE html>
-<link rel="icon" href="data:x-icon">
+<!doctype html>
 <script>
-  location.host.startsWith('localhost:') && document.write(
-    '<script src="//localhost:35729/livereload.js?snipver=1"><\/script>')
+  /**
+   * Github pages don't have proper routing for a single-page app, so we
+   * redirect all requests back to index.html, with a search parameter set to
+   * the pathname. When the parameter is detected there, the URL will be
+   * rewritten.
+   */
+  const url = new URL(`${location.origin}/${location.pathname.split('/')[1]}/`)
+  url.searchParams.set('pathname', location.pathname)
+  location.replace(url.toString())
 </script>
-<script src="lib/markdown-it.min.js"></script>
-<script type="module" src="index.js"></script>

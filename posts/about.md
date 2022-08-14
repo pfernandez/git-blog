@@ -2,7 +2,7 @@
 
 ## Compose posts in markdown
 
-Focus on what matters: your content.
+"Features" are a distraction. Focus on what matters: your content.
 
 ## Work directly in Github
 

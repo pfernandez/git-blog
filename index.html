@@ -1,0 +1,13 @@
+<!doctype html>
+<link rel="icon" href="data:x-icon">
+<script>
+  location.host.startsWith('localhost:') && document.write(
+    '<script src="//localhost:35729/livereload.js?snipver=1"><\/script>')
+</script>
+<script>
+  // Rewrite the pathname if redirected here from 404.html.
+  const pathname = new URL(location).searchParams.get('pathname')
+  pathname && history.replaceState({}, '', pathname)
+</script>
+<script src="lib/markdown-it.min.js"></script>
+<script type="module" src="index.js"></script>
