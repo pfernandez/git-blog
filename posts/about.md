@@ -1,9 +1,13 @@
-# About _git-blog_
+# _git-blog_
 
 ## Compose posts in markdown
 
-Just markdown, that's it.
+Focus on what matters: your content.
 
 ## Work directly in Github
 
-Make edits. Save. Done.
+Edit. Save. Done.
+
+## Style it any way you like
+
+Use the default look or customize the CSS right in Github. No download required.
