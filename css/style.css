@@ -84,6 +84,22 @@ header h2 {
   margin-top: 15px;
 }
 
+a {
+  display: inline-block;
+  border-bottom: 1px dotted;
+  color: rebeccapurple;
+  cursor: pointer;
+  line-height: 1.2;
+  margin-bottom: 8px;
+  padding-bottom: 0.3px;
+  text-decoration: none;
+}
+
+li a {
+  font-size: larger;
+  font-weight: bolder;
+}
+
 code, pre {
   background: ghostwhite;
   font-family: 'Source Code Pro', monospace;
