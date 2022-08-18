@@ -1,4 +1,4 @@
-import post from '/components/post.js'
+import post from '../post.js'
 
 const renderPost = () => update(post(location.pathname))
 
