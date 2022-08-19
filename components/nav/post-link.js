@@ -8,7 +8,7 @@ const basePath =
   (segments = split(location.pathname, '/')) =>
     length(segments) > 2 ? '/' + second(segments) : ''
 
-export default ([_, {path, title}]) =>
-  a({onclick: () => navigateTo(basePath() + path, renderPost)},
+export default ({path, title}) =>
+  a({onclick: () => navigateTo(log(basePath() + path), renderPost)},
     title)
 

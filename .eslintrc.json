@@ -76,6 +76,7 @@
           "push": "readonly",
           "rest": "readonly",
           "reverse": "readonly",
+          "second": "readonly",
           "slice": "readonly",
           "split": "readonly",
           "store": "readonly",
@@ -86,6 +87,9 @@
           "on": "readonly",
           "navigateTo": "readonly",
           "pathname": "readonly",
+
+          "createElement": "readonly",
+          "update": "readonly",
 
           "a": "readonly",
           "abbr": "readonly",
