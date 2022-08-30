@@ -1,20 +1,23 @@
 import post from '../post.js'
 import sidebar from './sidebar.js'
 
-const isFolder = (path = location.pathname) =>
-  path.length > 1 && path.endsWith('/')
-
 const renderItem = () =>
-  isFolder() ? sidebar('.') : update(post())
+  urlParam('directory') ? sidebar('.') : update(post())
 
 on('popstate', renderItem)
 
-const basePath = (path, name) =>
-  name === 'home'
-    ? '/'
-    : (isFolder() ? path : '/') + name
+const urlPath = name =>
+  urlParam('directory') + (name === 'home' ? '/' : name)
 
-export default (path, name) =>
-  a({onclick: () => navigateTo(
-    log('navigateTo', basePath(path, name)), renderItem)}, name)
+const basePath = name =>
+  name === 'home' ? '/' : '/' + name
+
+const isFolder = path =>
+  path.length > 1 && path.endsWith('/')
+
+export default name =>
+  a({onclick: () =>
+    isFolder(log('isFolder', basePath(name)))
+      ? urlParam('directory', urlPath(name))
+      : navigateTo(urlPath(name), renderItem)}, name)
 
