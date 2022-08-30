@@ -1,12 +1,8 @@
 import md from './markdown.js'
-import posts from '../posts/index.js'
 
-const hasPath = (path, basename) =>
-  basename === '' ? path === '/' : path === basename
+const fileName = path =>
+  path === '/' ? 'home.md' : last(split(path, '/')) + '.md'
 
-const fileName = pathname =>
-  find(keys(posts),
-       name => hasPath(posts[name].path, '/' + last(split(pathname, '/'))))
+export default (path = location.pathname) =>
+  createElement('post', article(md(fileName(path))))
 
-export default pathname =>
-  createElement('post', article(md('posts/' + fileName(pathname))))

@@ -1,14 +1,20 @@
 import post from '../post.js'
+import sidebar from './sidebar.js'
 
-const renderPost = () => update(post(location.pathname))
+const isFolder = (path = location.pathname) =>
+  path.length > 1 && path.endsWith('/')
 
-on('popstate', renderPost)
+const renderItem = () =>
+  isFolder() ? sidebar('.') : update(post())
 
-const basePath =
-  (segments = split(location.pathname, '/')) =>
-    length(segments) > 2 ? '/' + second(segments) : ''
+on('popstate', renderItem)
 
-export default ({path, title}) =>
-  a({onclick: () => navigateTo(log(basePath() + path), renderPost)},
-    title)
+const basePath = (path, name) =>
+  name === 'home'
+    ? '/'
+    : (isFolder() ? path : '/') + name
+
+export default (path, name) =>
+  a({onclick: () => navigateTo(
+    log('navigateTo', basePath(path, name)), renderItem)}, name)
 

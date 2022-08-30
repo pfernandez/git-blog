@@ -1,13 +1,19 @@
-import folder from './folder.js'
 import postLink from './post-link.js'
 
-const listItem = ([key, value]) =>
-  key === 'folders'
-    ? value.length ? li(folder(value)) : ''
-    : li(postLink(value))
+const linkText = name =>
+  replace(name, '.md', '')
 
-const list = index =>
-  map(entries(index), listItem)
+const list = (path, items) =>
+  ul(map(items, name =>
+    li(postLink(path, linkText(name)))))
 
-export default index => ul(list(index))
+// TODO: Dedupe with post-link.js. Also too many calls to location.pathname.
+const isFolder = (path = location.pathname) =>
+  path.length > 1 && path.endsWith('/')
+
+export default () =>
+  (import((isFolder() ? location.pathname : '/') + 'index.js')
+    .then(({default: items}) =>
+      update(list(location.pathname, items))),
+  list(location.pathnae, []))
 
