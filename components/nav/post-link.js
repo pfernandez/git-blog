@@ -2,12 +2,12 @@ import post from '../post.js'
 import sidebar from './sidebar.js'
 
 const renderItem = () =>
-  urlParam('directory') ? sidebar('.') : update(post())
+  urlParam('nav') ? sidebar('.') : update(post())
 
 on('popstate', renderItem)
 
 const urlPath = name =>
-  urlParam('directory') + (name === 'home' ? '/' : name)
+  urlParam('nav') + (name === 'home' ? '/' : name)
 
 const basePath = name =>
   name === 'home' ? '/' : '/' + name
@@ -18,6 +18,6 @@ const isFolder = path =>
 export default name =>
   a({onclick: () =>
     isFolder(log('isFolder', basePath(name)))
-      ? urlParam('directory', urlPath(name))
+      ? urlParam('nav', urlPath(name), false)
       : navigateTo(urlPath(name), renderItem)}, name)
 
