@@ -8,7 +8,7 @@ const list = items =>
     li(postLink(linkText(name)))))
 
 export default (directory = urlParam('nav')) =>
-  (import(('/' + directory || '/') + 'index.js')
+  (import(log('fetching index', '/' + directory || '/') + 'index.js')
     .then(({default: items}) => update(list(items))),
   list([]))
 
