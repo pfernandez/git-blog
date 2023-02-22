@@ -2,26 +2,4 @@
 
 [WIP](https://pfernandez.github.io/git-blog/)
 
-## Building and running on localhost
-
-**Install**
-
-```sh
-npm install
-```
-
-Change things...
-
-**Build**
-
-```sh
-npm run build
-```
-
-**Deploy**
-
-```sh
-git add -A .
-git commit -m 'Changed the thing'
-git push
-```
+A blogging platform that runs entirely in Github. Create and publish posts, change the appearance and logic, and of course keep a revision history of everything, all from right in your Github repository. 
