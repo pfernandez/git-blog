@@ -89,10 +89,8 @@
           "type": "readonly",
           "walk": "readonly",
 
-          "urlParam": "readonly",
-          "navigateTo": "readonly",
+          "navigate": "readonly",
           "on": "readonly",
-          "pathname": "readonly",
 
           "createElement": "readonly",
           "update": "readonly",

@@ -1,8 +1,9 @@
 import md from './markdown.js'
 
-const fileName = path =>
-  path === '/' ? 'home.md' : last(split(path, '/')) + '.md'
+// TODO? Pass pathname in through shared data defined at the app root.
+const filePath = (pathname = location.pathname) =>
+  pathname === '/' ? 'home.md' : pathname.split('/').slice(-1) + '.md'
 
-export default (path = location.pathname) =>
-  createElement('post', article(md(fileName(path))))
+export default () =>
+  createElement('post', article(md(filePath())))
 

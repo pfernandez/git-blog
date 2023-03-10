@@ -1,30 +1,22 @@
 import post from '../post.js'
 import sidebar from './sidebar.js'
 
-const renderItem = () =>
-  urlParam('nav') ? sidebar('.') : update(post())
+const renderPost = () => update(post())
 
-on('popstate', renderItem)
+on('popstate', renderPost)
 
-// FIXME: Loading module from “http://localhost:3000/a-folder/index.js” was blocked because of a disallowed MIME type (“text/html”).
-// urlParam(nav) should be /posts/a-folder/index.js
-const urlPath = name =>
-  urlParam('nav') + (name === 'home' ? '/' : name)
+const basePath = segments =>
+  '/' + segments.slice(0, segments.length - 1).join('/')
 
-const basePath = name =>
-  name === 'home' ? '/' : '/' + name
+// TODO: Currently this only works one level deep.
+const index = (linkText, pathname = location.pathname) =>
+  basePath(pathname.split('/')) + linkText + 'index.js'
 
-const currentBasePath = (path = location.pathname) =>
-  path.split('/').slice(0, 2).join()
-
-const isDirectory = name => name.endsWith('/')
-
-export default name =>
+const createLink = (text, isDirectory = text.endsWith('/')) =>
   a({onclick: () =>
-    isDirectory(name)
-      ? log(name, 'is a directory', currentBasePath() === location.pathname)
-        ? log('not sure this is possible')
-        : urlParam('nav', urlPath(name), false)  // TODO: go to definition for globals?
-      : log(name, 'is not a directory', navigateTo(urlPath(name), renderItem))},
-    name)
+    isDirectory
+      ? log('listing', index(text), update(sidebar(index(text))))
+      : log('rendering', text, navigate(text, renderPost))},
+    text)
 
+export default linkText => createLink(linkText)
