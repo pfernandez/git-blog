@@ -12,7 +12,7 @@ html(
   body(
     header(
       hgroup(
-        h1('git-blog'),
+        h1(a({href: '/'}, 'git-blog')),
         h2('Github blogging for the masses'))),
     nav(sidebar()),
     main(post())))

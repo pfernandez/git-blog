@@ -71,9 +71,11 @@ header h1, header h2 {
   display: inline-block;
 }
 
-header h1 {
+header h1, header h1 > a {
+  border-bottom: none;
+  color: black;
   font-family: 'Playball', cursive, sans-serif;
-  font-size: 3em;
+  font-size: 54px;
   margin: 10px 20px 0 0;
   text-shadow: 1px 1px 1px rgb(0 0 0 / 20%);
   text-transform: none;

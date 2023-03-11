@@ -16,13 +16,14 @@ const basePath = (segments = location.pathname.split('/')) =>
 // * The rendered post should update with sidebar navigation.
 // * The URL should always reflect the actual path to the markdown file in the
 //   project.
-const createLink = (text, path = basePath() + '/' + text) =>
+const createLink = (linkText, path = basePath() + '/' + linkText) =>
   a({onclick: () =>
-    text.endsWith('/')
+    linkText.endsWith('/')  // the link was to a folder
       ? log('navigating and listing', path + 'index.js',
             setUrl(path, () => update(sidebar(path + 'index.js'))))
 
-      : log('rendering', path, setUrl(path, renderPost))},
-    text)
+      : log('rendering', path,
+            setUrl(path, renderPost))},
+    linkText)
 
 export default linkText => createLink(linkText)
