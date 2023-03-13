@@ -88,8 +88,9 @@
           "sum": "readonly",
           "type": "readonly",
           "walk": "readonly",
+          "when": "readonly",
 
-          "navigate": "readonly",
+          "setUrl": "readonly",
           "on": "readonly",
 
           "createElement": "readonly",
