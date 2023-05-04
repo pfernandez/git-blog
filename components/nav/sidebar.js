@@ -25,15 +25,13 @@ const linkText = fileName =>
   replace(fileName, '.md', '')
 
 const parentDirectory = (path = location.pathname) =>
-  path.endsWith('/')
-    ? path.split('/').slice(-3)[0]
-    : path.split('/').slice(-2)[0]
+  path.split('/').slice(path.endsWith('/') ? -3 : -2).join('/')
 
 const list = (items, parent = parentDirectory()) =>
   ul(when(parent !== '/',
-          li(a({onclick: () => setUrl(fullPath(parent), renderPost)},
+          li(a({onclick: () => setUrl(log(parent, '/' + parent))}, // renderPost)},
                i({className: 'arrow left'}),
-               parentDirectory()))),
+               parent))),
      map(items, name =>
        li(createLink(linkText(name)))))
 
