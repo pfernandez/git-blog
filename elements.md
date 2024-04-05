@@ -39,7 +39,7 @@ element should be reloaded, we update it directly with new arguments.
 const counter = (id, count) =>
   div({ id },
       pre(count),
-      button({ onclick: () => update(counter(id, count + 1)) },
+      button({ onclick: () => counter(id, count + 1) },
              'Increment'))
 ```
 
