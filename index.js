@@ -2,6 +2,6 @@ export default
 
 ['home.md',
  'about.md',
- 'elements.md',
+  'elements.md',
  'posts/']
 
