@@ -2,7 +2,13 @@ import './lib/expressive/global.js'
 import post from './components/post.js'
 import sidebar from './components/nav/sidebar.js'
 
-document.documentElement.replaceWith(
+const counter = (id, count) =>
+  div({id},
+      pre(count),
+      button({onclick: () => counter(id, count + 1)},
+             'Increment'))
+
+render(
   html(
     head(
       title('git-blog'),
