@@ -4,5 +4,6 @@ import md from './markdown.js'
 const filePath = (pathname = location.pathname) =>
   pathname === '/' ? 'home.md' : pathname.split('/').slice(-1) + '.md'
 
-export default () => article(md(filePath()))
+export default () =>
+  element('post', article(md(filePath())))
 

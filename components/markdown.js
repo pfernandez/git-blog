@@ -1,6 +1,5 @@
 import hljs from '../lib/highlight/es/core.min.js'
 import javascript from '../lib/highlight/es/languages/javascript.min.js'
-import {createElement, render} from '../lib/expressive/dom/elements.js'
 
 const {registerLanguage, highlight} = hljs
 const {markdownit} = window
@@ -17,8 +16,8 @@ const config = {html: true,
                 highlight: parseCodeBlock}
 
 const md = (markdown = '', props = {}) =>
-  createElement('md', {innerHTML: markdownit(config).render(markdown),
-                       ...props})
+  element('md', {innerHTML: markdownit(config).render(markdown),
+                 ...props})
 
 /**
  * Because inline scripts have already been run, rerendering them (i.e. when
@@ -44,7 +43,7 @@ const injectScripts = el =>
 
 const renderMarkdown = (markdown, props) =>
   (fetch(markdown).then(response => response.text())
-                  .then(markdown => injectScripts(render(md(markdown, props))))
+                  .then(markdown => injectScripts(md(markdown, props)))
                   .catch(result => isString(result)
                     ? md(markdown, props)
                     : console.error(result)),

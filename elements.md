@@ -36,25 +36,18 @@ state](https://reactjs.org/docs/state-and-lifecycle.html) to indicate that an
 element should be reloaded, we update it directly with new arguments.
 
 ```live-js
-const counter = count =>
-  render(
-    div({ id: 'simple-counter' },
-        pre(count),
-        button({ onclick: () => counter(count + 1) },
-               'Increment')))
+const counter = (id, count) =>
+  div({ id },
+      pre(count),
+      button({ onclick: () => counter(id, count + 1) },
+             'Increment'))
 ```
-
-_TODO: Perhaps a `component` (or `element`) function would allow `count` to be
-scoped by the function name instead of requiring an `id`. `component` may
-implicitly call
-`render`._
-
 
 Here it is in action:
 
 <script>
   document.currentScript.after(
-    figure(h3('A Simple Counter'), counter(0)))
+    figure(h3('A Simple Counter'), counter('c1', 0)))
 </script>
 
 **So: On the client, state really only needs to exist in three places:**

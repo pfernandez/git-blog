@@ -73,7 +73,6 @@
           "last": "readonly",
           "length": "readonly",
           "log": "readonly",
-          "map": "readonly",
           "omap": "readonly",
           "omit": "readonly",
           "partial": "readonly",
@@ -95,7 +94,7 @@
           "on": "readonly",
 
           "createElement": "readonly",
-          "render": "readonly",
+          "update": "readonly",
 
           "a": "readonly",
           "abbr": "readonly",
@@ -153,7 +152,6 @@
           "i": "readonly",
           "iframe": "readonly",
           "img": "readonly",
-          "imgmap": "readonly",
           "input": "readonly",
           "ins": "readonly",
           "kbd": "readonly",
@@ -162,6 +160,7 @@
           "li": "readonly",
           "link": "readonly",
           "main": "readonly",
+          "map": "readonly",
           "mark": "readonly",
           "menu": "readonly",
           "meta": "readonly",

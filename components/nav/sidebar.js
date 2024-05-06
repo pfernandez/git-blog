@@ -31,4 +31,4 @@ const list = (items, parent = parentDirectory()) =>
 
 export default (index = '/index.js') =>
   (import(log('Fetching', index)).then(({default: items}) =>
-    render(list(items))), list([]))
+    list(items)), list([]))
