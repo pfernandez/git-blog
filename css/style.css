@@ -92,9 +92,7 @@ a {
   border-bottom: 1px dotted;
   color: rebeccapurple;
   cursor: pointer;
-  line-height: 1.2;
-  margin-bottom: 8px;
-  padding-bottom: 0.3px;
+  line-height: 1;
   text-decoration: none;
 }
 

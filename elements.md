@@ -50,7 +50,7 @@ Here it is in action:
     figure(h3('A Simple Counter'), counter('c1', 0)))
 </script>
 
-**So: On the client, state really only needs to exist in three places:**
+**So: On the client, state really only needs to exist in two places:**
 
 1. In the state rendered on the screen at any given moment.
 2. In the code itself as default function arguments. While not stricly
