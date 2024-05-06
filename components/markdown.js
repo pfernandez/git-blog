@@ -16,8 +16,8 @@ const config = {html: true,
                 highlight: parseCodeBlock}
 
 const md = (markdown = '', props = {}) =>
-  createElement('md', {innerHTML: markdownit(config).render(markdown),
-                       ...props})
+  element('md', {innerHTML: markdownit(config).render(markdown),
+                 ...props})
 
 /**
  * Because inline scripts have already been run, rerendering them (i.e. when
@@ -29,8 +29,8 @@ const md = (markdown = '', props = {}) =>
 let loaded = false
 const temp = window.onerror
 
-const replaceScripts = el =>
-  el.querySelectorAll('script, .language-live-js')
+const replaceScripts = () =>
+  document.querySelectorAll('md script, md .language-live-js')
     .forEach(s => s.tagName.toLowerCase() === 'script'
       ? s.replaceWith(script(s.innerText))
       : s.after(script(s.innerText)))
@@ -41,14 +41,11 @@ const injectScripts = el =>
   window.onerror = temp,
   loaded = true)
 
-const injectMarkdown = el =>
-  (update(el), injectScripts(el))
-
 const renderMarkdown = (markdown, props) =>
   (fetch(markdown).then(response => response.text())
-                  .then(markdown => injectMarkdown(md(markdown, props)))
+                  .then(markdown => injectScripts(md(markdown, props)))
                   .catch(result => isString(result)
-                    ? update(md(markdown, props))
+                    ? md(markdown, props)
                     : console.error(result)),
   md('', props))
 
