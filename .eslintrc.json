@@ -93,6 +93,7 @@
           "setUrl": "readonly",
           "on": "readonly",
 
+          "component": "readonly",
           "createElement": "readonly",
           "update": "readonly",
 

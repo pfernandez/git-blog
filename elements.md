@@ -36,18 +36,18 @@ state](https://reactjs.org/docs/state-and-lifecycle.html) to indicate that an
 element should be reloaded, we update it directly with new arguments.
 
 ```live-js
-const counter = (id, count) =>
-  div({ id },
-      pre(count),
-      button({ onclick: () => update(counter(id, count + 1)) },
-             'Increment'))
+const counter = component((count) =>
+  div(
+    pre(count),
+      button({ onclick: () => update(counter(count + 1)) },
+             'Increment')))
 ```
 
 Here it is in action:
 
 <script>
   document.currentScript.after(
-    figure(h3('A Simple Counter'), counter('c1', 0)))
+    figure(h3('A Simple Counter'), counter(0)))
 </script>
 
 **So: On the client, state really only needs to exist in two places:**
