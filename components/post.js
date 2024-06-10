@@ -5,6 +5,5 @@ const filePath = (pathname = location.pathname) =>
   pathname === '/' ? 'home.md' : pathname.split('/').slice(-1) + '.md'
 
 export default () =>
-  createElement('post', article())
-  // createElement('post', article(md(filePath())))
+  createElement('post', article(md(filePath())))
 
