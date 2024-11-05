@@ -1,6 +1,9 @@
 import './lib/expressive/global.js'
 import post from './components/post.js'
-import sidebar from './components/nav/sidebar.js'
+import posts from './posts.js'
+// import sidebar from './components/nav/sidebar.js'
+
+console.log(posts)
 
 html(
   head(
@@ -14,6 +17,6 @@ html(
       hgroup(
         h1(a({href: '/'}, 'git-blog')),
         h2('Github blogging for the masses'))),
-    nav(sidebar()),
+    // nav(sidebar()),
     main(post())))
 

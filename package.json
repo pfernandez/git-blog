@@ -27,10 +27,10 @@
   "nodemonConfig": {
     "ext": "html,js,json",
     "ignore": [
-      "index.js",
-      "components/",
-      "posts/",
-      "lib/"
+      "lib/highlight/",
+      "lib/markdown-it.min.js",
+      "node_modules/",
+      "posts.js"
     ]
   },
   "scripts": {
